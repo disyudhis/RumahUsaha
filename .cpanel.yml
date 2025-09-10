@@ -1,0 +1,4 @@
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home/nnsxmltw/public_html/
+    - /bin/cp * $DEPLOYPATH
