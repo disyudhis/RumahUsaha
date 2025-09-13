@@ -46,7 +46,7 @@ new class extends Component {
                     {{-- Logo/Avatar --}}
                     <div class="flex-shrink-0 mr-4">
                         @if ($profile->logo)
-                        <img src="{{ asset('storage/' . $profile->logo )) }}" alt="{{ $profile->business_name }}"
+                        <img src="{{ asset('storage/' . $profile->logo ) }}" alt="{{ $profile->business_name }}"
                             class="w-12 h-12 rounded-lg object-cover">
                         @else
                         <div
