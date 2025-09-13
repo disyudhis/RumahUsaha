@@ -176,10 +176,10 @@ new class extends Component {
             session()->flash('success', 'Pendaftaran berhasil! Selamat datang di platform UMKM.');
 
             // Redirect or dispatch event
-            $this->dispatch('registration-success');
+            // $this->dispatch('registration-success');
 
             // You can redirect here if needed
-            // return redirect()->route('dashboard');
+            return redirect()->route('admin.umkm');
         } catch (\Exception $e) {
             $this->isSubmitting = false;
             session()->flash('error', 'Terjadi kesalahan saat mendaftar. Silakan coba lagi.');

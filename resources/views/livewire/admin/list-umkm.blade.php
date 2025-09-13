@@ -277,7 +277,7 @@ new class extends Component {
                                     <div class="flex-shrink-0 h-12 w-12">
                                         @if ($umkm->hasLogo())
                                             <img class="h-12 w-12 rounded-lg object-cover border"
-                                                src="{{ $umkm->logo_url }}" alt="{{ $umkm->business_name }}">
+                                                src="{{ Storage::url($umkm->logo) }}" alt="{{ $umkm->business_name }}">
                                         @else
                                             <div
                                                 class="h-12 w-12 rounded-lg bg-blue-100 flex items-center justify-center border">
