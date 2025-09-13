@@ -60,7 +60,7 @@ new class extends Component {
                     <div
                         class="w-full h-48 bg-gray-100 rounded-lg border-2 border-dashed border-gray-300 flex items-center justify-center mb-6">
                         @if ($umkm->logo)
-                            <img src="{{ Storage::url($umkm->logo) }}" alt="{{ $umkm->business_name }}"
+                            <img src="{{ asset('storage/' . $umkm->logo) }}" alt="{{ $umkm->business_name }}"
                                 class="w-full h-full object-cover rounded-lg">
                         @else
                             <div class="text-center">
