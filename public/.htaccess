@@ -1,9 +1,13 @@
 <IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Redirect www ke non-www (opsional, pilih satu versi saja)
+    RewriteCond %{HTTP_HOST} ^www\.bizhouse\.id [NC]
+    RewriteRule ^(.*)$ https://bizhouse.id/$1 [L,R=301]
+
     <IfModule mod_negotiation.c>
         Options -MultiViews -Indexes
     </IfModule>
-
-    RewriteEngine On
 
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
