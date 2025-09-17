@@ -160,11 +160,11 @@ new class extends Component {
                 Jadilah yang pertama mendaftarkan usaha Anda di platform digital UMKM komunitas ini dan raih peluang
                 bisnis yang lebih luas!
             </p>
-            <a href="{{ route('business.create') }}"
+            {{-- <a href="{{ route('business.create') }}"
                 class="inline-flex items-center px-8 py-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white font-semibold rounded-xl hover:from-orange-600 hover:to-orange-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
                 <span class="mr-2">📝</span>
                 Daftarkan Usaha Anda
-            </a>
+            </a> --}}
         </div>
     @endif
     @push('styles')
