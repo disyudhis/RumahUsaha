@@ -41,7 +41,7 @@
     {{-- Join Community Section --}}
     <section id="join-community" class="text-center scroll-mt-20">
         <div
-            class="bg-gradient-to-br from-primary-600 to-primary-800 rounded-xl p-8 md:p-12 text-white shadow-xl relative overflow-hidden">
+            class="bg-gradient-to-br from-secondary-600 to-secondary-500 rounded-xl p-8 md:p-12 text-white shadow-xl relative overflow-hidden">
             {{-- Decorative Elements --}}
             <div
                 class="absolute top-0 right-0 w-32 h-32 bg-white opacity-10 rounded-full transform translate-x-16 -translate-y-16">

@@ -73,9 +73,9 @@ new class extends Component {
                 <div class="text-center lg:text-left">
                     <h1 class="text-4xl lg:text-5xl font-bold text-gray-900 mb-6 leading-tight">
                         Dari Rumah,<br>
-                        <span class="text-orange-600">Untuk Negeri</span>
+                        <span>Untuk Negeri</span>
                     </h1>
-                    <p class="text-lg lg:text-xl text-gray-600 mb-8 max-w-lg mx-auto lg:mx-0">
+                    <p class="text-lg lg:text-xl text-black mb-8 max-w-lg mx-auto lg:mx-0">
                         Etalase Digital UMKM Komunitas Anda
                     </p>
 
@@ -87,7 +87,7 @@ new class extends Component {
                                     class="w-full pl-6 pr-4 py-4 border-0 focus:ring-0 focus:outline-none text-gray-700 placeholder-gray-400 text-lg">
                             </div>
                             <button
-                                class="bg-orange-600 hover:bg-orange-700 text-white px-8 py-4 font-semibold text-lg transition-colors">
+                                class="bg-secondary-800 hover:bg-secondary-900 text-white px-8 py-4 font-semibold text-lg transition-colors">
                                 Cari
                             </button>
                         </div>
@@ -113,12 +113,12 @@ new class extends Component {
     {{-- Category Filter Buttons --}}
     <div class="flex flex-wrap justify-center gap-3 mb-8">
         <button wire:click="clearFilters"
-            class="px-6 py-2.5 rounded-full text-sm font-medium transition-all duration-200 {{ !$category ? 'bg-orange-500 text-white shadow-md' : 'bg-white text-gray-600 hover:bg-orange-50 hover:text-orange-600 border border-gray-200' }}">
+            class="px-6 py-2.5 rounded-full text-sm font-medium transition-all duration-200 {{ !$category ? 'bg-secondary-800 text-white shadow-md' : 'bg-white text-gray-600 hover:bg-orange-50 hover:text-orange-600 border border-gray-200' }}">
             🏠 Semua
         </button>
         @foreach ($categories as $key => $label)
             <button wire:click="setCategory('{{ $key }}')"
-                class="px-6 py-2.5 rounded-full text-sm font-medium transition-all duration-200 {{ $category === $key ? 'bg-orange-500 text-white shadow-md' : 'bg-white text-gray-600 hover:bg-orange-50 hover:text-orange-600 border border-gray-200' }}">
+                class="px-6 py-2.5 rounded-full text-sm font-medium transition-all duration-200 {{ $category === $key ? 'bg-secondary-800 text-white shadow-md' : 'bg-white text-gray-600 hover:bg-orange-50 hover:text-orange-600 border border-gray-200' }}">
                 {{ $label }}
             </button>
         @endforeach
@@ -200,7 +200,7 @@ new class extends Component {
 
                             {{-- Action Button --}}
                             <button
-                                class="w-full bg-orange-500 hover:bg-orange-600 text-white font-medium py-2.5 px-4 rounded-lg transition-colors duration-200">
+                                class="w-full bg-primary-400 hover:bg-primary-300 text-white font-medium py-2.5 px-4 rounded-lg transition-colors duration-200">
                                 Detail Produk
                             </button>
                         </div>
@@ -243,7 +243,7 @@ new class extends Component {
                 </p>
                 @if ($search || $category)
                     <button wire:click="clearFilters"
-                        class="bg-orange-500 hover:bg-orange-600 text-white font-semibold px-8 py-3 rounded-xl transition-colors duration-200">
+                        class="bg-primary-400 hover:bg-primary-300 text-white font-semibold px-8 py-3 rounded-xl transition-colors duration-200">
                         Lihat Semua Produk
                     </button>
                 @endif

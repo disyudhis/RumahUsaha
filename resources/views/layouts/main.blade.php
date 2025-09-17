@@ -35,7 +35,7 @@
                     <div class="flex-shrink-0">
                         <a href="{{ route('home') }}"
                             class="flex items-center text-xl font-bold text-secondary-800 hover:text-primary-600 transition-colors">
-                            <div class="w-8 h-8 bg-primary-500 rounded-lg flex items-center justify-center mr-3">
+                            <div class="w-8 h-8 bg-primary-400 rounded-lg flex items-center justify-center mr-3">
                                 <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
                                     <path
                                         d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
@@ -192,7 +192,7 @@
     </main>
 
     {{-- Footer --}}
-    <footer class="bg-primary-500 text-white mt-16">
+    <footer class="bg-secondary-900 text-white mt-16">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
                 <div class="md:col-span-2">

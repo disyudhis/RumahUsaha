@@ -127,8 +127,7 @@ new class extends Component {
 
                         {{-- Action Button --}}
                         <button wire:click="viewProfile({{ $profile->id }})"
-                            class="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 px-4 rounded-xl transition-colors duration-200 flex items-center justify-center group-hover:bg-orange-600">
-                            <span class="mr-2">👁️</span>
+                            class="w-full bg-primary-400 hover:bg-primary-300 text-white font-semibold py-3 px-4 rounded-xl transition-colors duration-200 flex items-center justify-center group-hover:bg-primary-400">
                             Lihat Profil
                         </button>
                     </div>

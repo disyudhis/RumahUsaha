@@ -230,8 +230,7 @@ new class extends Component {
 
                             {{-- Action Button --}}
                             <button wire:click="viewEvent({{ $event['id'] }})"
-                                class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200 flex items-center">
-                                <span class="mr-1">📖</span>
+                                class="bg-primary-400 hover:bg-primary-300 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200 flex items-center">
                                 Detail
                             </button>
                         </div>
