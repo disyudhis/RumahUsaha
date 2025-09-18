@@ -21,27 +21,20 @@
 
     {{-- Business Profiles Section --}}
     <section id="list-umkm" class="mb-12 scroll-mt-20">
-        <div class="flex items-center justify-between mb-6">
-            <h2 class="text-2xl font-bold text-gray-900">PROFIL UMKM ANGGOTA TERBARU</h2>
-            {{-- <a href="#" class="text-orange-600 hover:text-orange-700 text-sm font-medium">
-                Lihat Semua →
-            </a> --}}
-        </div>
+
         <livewire:main.list-umkm />
     </section>
 
     {{-- News & Activities --}}
     <section id="berita-kegiatan" class="mb-12 scroll-mt-20">
-        <div class="flex items-center justify-between mb-6">
-            <h2 class="text-2xl font-bold text-gray-900">BERITA & KEGIATAN KOMUNITAS</h2>
-        </div>
+
         <livewire:main.list-event />
     </section>
 
     {{-- Join Community Section --}}
     <section id="join-community" class="text-center scroll-mt-20">
         <div
-            class="bg-gradient-to-br from-secondary-600 to-secondary-500 rounded-xl p-8 md:p-12 text-white shadow-xl relative overflow-hidden">
+            class="bg-gradient-to-br from-fix-400 to-fix-100 p-8 md:p-12 text-white shadow-xl relative overflow-hidden">
             {{-- Decorative Elements --}}
             <div
                 class="absolute top-0 right-0 w-32 h-32 bg-white opacity-10 rounded-full transform translate-x-16 -translate-y-16">

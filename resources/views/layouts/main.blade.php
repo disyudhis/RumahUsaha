@@ -11,13 +11,13 @@
     <meta name="description" content="@yield('description', 'Platform digital untuk mempromosikan dan menghubungkan pelaku UMKM di lingkungan perumahan')">
 
     <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.bunny.net/css?family=aleo:500|inter:400,500,600,700&display=swap" rel="stylesheet" />
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @stack('styles')
 </head>
 
-<body class="font-inter bg-accent-50 antialiased">
+<body class="font-inter-400 bg-neutral-100 antialiased">
     {{-- Skip to content for accessibility --}}
     <a href="#main-content"
         class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-primary-600 text-white px-4 py-2 rounded-lg shadow-warm">
@@ -35,7 +35,7 @@
                     <div class="flex-shrink-0">
                         <a href="{{ route('home') }}"
                             class="flex items-center text-xl font-bold text-secondary-800 hover:text-primary-600 transition-colors">
-                            <div class="w-8 h-8 bg-primary-400 rounded-lg flex items-center justify-center mr-3">
+                            <div class="w-8 h-8 bg-fix-400 rounded-lg flex items-center justify-center mr-3">
                                 <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
                                     <path
                                         d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
@@ -186,18 +186,18 @@
 
     {{-- Main Content --}}
     <main id="main-content" class="min-h-screen">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-8">
+        <div>
             @yield('content')
         </div>
     </main>
 
     {{-- Footer --}}
-    <footer class="bg-secondary-900 text-white mt-16">
+    <footer class="bg-fix-100 text-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
                 <div class="md:col-span-2">
                     <div class="flex items-center mb-4">
-                        <div class="w-8 h-8 bg-primary-500 rounded-lg flex items-center justify-center mr-3">
+                        <div class="w-8 h-8 bg-fix-400 rounded-lg flex items-center justify-center mr-3">
                             <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
                                 <path
                                     d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />

@@ -48,7 +48,13 @@ new class extends Component {
     }
 }; ?>
 
-<div class="mb-8">
+<div class="px-4 sm:px-6 mb-8">
+    <div class="flex items-center justify-between mb-6">
+        <h2 class="text-2xl font-bold text-gray-900">PROFIL UMKM ANGGOTA TERBARU</h2>
+        {{-- <a href="#" class="text-orange-600 hover:text-orange-700 text-sm font-medium">
+                Lihat Semua →
+            </a> --}}
+    </div>
     @if ($umkmProfiles->count() > 0)
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             @foreach ($umkmProfiles as $profile)
@@ -177,4 +183,3 @@ new class extends Component {
         </style>
     @endpush
 </div>
-

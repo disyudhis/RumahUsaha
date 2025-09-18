@@ -14,8 +14,15 @@ export default {
             fontFamily: {
                 sans: ['Inter', 'Figtree', ...defaultTheme.fontFamily.sans],
                 inter: ['Inter', 'sans-serif'],
+                aleo: ['Aleo', 'serif'],
             },
             colors: {
+                fix : {
+                    100: '#7B4019',
+                    200: '#FFBF78',
+                    300: '#FFEEA9',
+                    400: '#FF7D29',
+                },
                 // Primary Brand Colors (Orange/Amber theme)
                 primary: {
                     50: '#fff7ed',

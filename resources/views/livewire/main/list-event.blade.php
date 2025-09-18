@@ -159,7 +159,10 @@ new class extends Component {
     }
 }; ?>
 
-<div class="mb-8">
+<div class="px-4 sm:px-6 mb-8">
+    <div class="flex items-center justify-between mb-6">
+            <h2 class="text-2xl font-bold text-gray-900">BERITA & KEGIATAN KOMUNITAS</h2>
+        </div>
     @if ($events->count() > 0)
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             @foreach ($events as $event)
