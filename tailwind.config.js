@@ -15,6 +15,7 @@ export default {
                 sans: ['Inter', 'Figtree', ...defaultTheme.fontFamily.sans],
                 inter: ['Inter', 'sans-serif'],
                 aleo: ['Aleo', 'serif'],
+                acme: ['Acme', 'sans-serif'],
             },
             colors: {
                 fix : {

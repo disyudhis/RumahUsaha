@@ -21,6 +21,7 @@ return new class extends Migration {
             $table->text('description')->nullable();
             $table->string('logo')->nullable();
             $table->boolean('is_active')->default(true);
+            $table->boolean('is_approved')->default(false);
             $table->timestamps();
         });
     }

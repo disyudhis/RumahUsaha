@@ -73,21 +73,21 @@ new class extends Component {
                 <!-- Background Image -->
                 <div class="absolute inset-0">
                     <img src="{{ asset('assets/bg.jpg') }}" alt="UMKM Hero"
-                        class="w-full h-full object-cover">
+                        class="w-full h-full object-cover object-top">
                 </div>
 
                 <!-- Gradient Overlay dari kiri ke tengah -->
-                <div class="absolute inset-0 bg-gradient-to-r from-fix-200 via-fix-300/25 to-transparent"></div>
+                <div class="absolute inset-0 lg:bg-gradient-to-r lg:from-fix-200 lg:via-fix-200/50 lg:to-transparent sm:bg-gradient-to-r sm:from-fix-200 sm:via-fix-300/10 sm:to-fix-100/70 bg-gradient-to-r from-fix-200 via-fix-200/50 to-transparent"></div>
 
                 <!-- Content -->
                 <div class="relative z-10 h-full flex items-center">
                     <div class="w-full lg:w-1/2 p-8 lg:p-24">
                         <h1
-                            class="text-4xl font-aleo lg:text-5xl xl:text-6xl font-bold text-gray-900 mb-6 leading-tight">
+                            class="text-4xl font-aleo lg:text-5xl xl:text-6xl font-bold text-black mb-6 leading-tight">
                             Dari Rumah,<br>
                             <span class="text-primary-600">Untuk Negeri</span>
                         </h1>
-                        <p class="text-lg lg:text-xl text-gray-700 mb-8 max-w-lg">
+                        <p class="text-lg lg:text-xl font-acme text-black mb-8 max-w-lg">
                             Etalase Digital UMKM Komunitas Anda
                         </p>
 
@@ -170,7 +170,7 @@ new class extends Component {
 
             {{-- Products Grid --}}
             @if ($products->count() > 0)
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                     @foreach ($products as $product)
                         <div
                             class="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 group">

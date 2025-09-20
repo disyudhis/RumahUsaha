@@ -11,13 +11,13 @@
     <meta name="description" content="@yield('description', 'Platform digital untuk mempromosikan dan menghubungkan pelaku UMKM di lingkungan perumahan')">
 
     <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=aleo:500|inter:400,500,600,700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.bunny.net/css?family=acme:400|aleo:500|inter:400,500,600,700&display=swap" rel="stylesheet" />
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @stack('styles')
 </head>
 
-<body class="font-inter-400 bg-neutral-100 antialiased">
+<body class="font-inter-400 bg-fix-300/15 antialiased">
     {{-- Skip to content for accessibility --}}
     <a href="#main-content"
         class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-primary-600 text-white px-4 py-2 rounded-lg shadow-warm">
@@ -54,7 +54,7 @@
                                     ['route' => 'business.*', 'label' => 'Profil Usaha', 'anchor' => '#list-umkm'],
                                     ['route' => 'products.*', 'label' => 'Produk', 'anchor' => '#list-product'],
                                     ['route' => 'news.*', 'label' => 'Berita', 'anchor' => '#news-activities'],
-                                    ['route' => 'membership.*', 'label' => 'Gabung', 'anchor' => '#join-community'],
+                                    ['route' => 'formulir-pendaftaran.*', 'label' => 'Gabung', 'anchor' => '#join-community'],
                                     // ['route' => 'contact', 'label' => 'Kontak', 'anchor' => null],
                                 ];
 

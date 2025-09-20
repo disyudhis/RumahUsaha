@@ -50,7 +50,7 @@
                         class="inline-flex items-center justify-center w-20 h-20 bg-white bg-opacity-20 rounded-full mb-6 backdrop-blur-sm">
                         <span class="text-3xl" aria-hidden="true">🤝</span>
                     </div>
-                    <h2 class="text-3xl md:text-4xl font-bold mb-4">
+                    <h2 class="text-3xl md:text-4xl font-aleo font-bold mb-4">
                         GABUNG SEBAGAI ANGGOTA
                     </h2>
                     <p class="text-lg text-primary-100 mb-8 max-w-3xl mx-auto leading-relaxed">
@@ -154,23 +154,22 @@
 
                 {{-- Call to Action Buttons --}}
                 <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                    <button type="button"
-                        class="inline-flex items-center bg-white text-primary-700 px-8 py-4 rounded-lg hover:bg-gray-50 font-semibold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
-                        onclick="alert('Formulir pendaftaran akan segera tersedia!')">
+                    <a href="{{ route('formulir-pendaftaran.index') }}" type="button"
+                        class="inline-flex items-center bg-white text-primary-700 px-8 py-4 rounded-lg hover:bg-gray-50 font-semibold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
                         <svg class="w-6 h-6 mr-3" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                         Formulir Pendaftaran Digital
-                    </button>
+                    </a>
 
-                    <button type="button"
+                    {{-- <button type="button"
                         class="inline-flex items-center border-2 border-white text-white px-8 py-4 rounded-lg hover:bg-white hover:text-primary-700 font-medium transition-all duration-300"
                         onclick="alert('Informasi lebih lanjut akan segera tersedia!')">
                         <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                         Pelajari Lebih Lanjut
-                    </button>
+                    </button> --}}
                 </div>
             </div>
         </div>

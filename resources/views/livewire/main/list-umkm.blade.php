@@ -12,6 +12,7 @@ new class extends Component {
     {
         return [
             'umkmProfiles' => UmkmProfile::with('user')
+                ->where('is_approved', true)
                 ->orderBy('created_at', 'desc')
                 ->limit(3) // Tampilkan 3 profil terbaru sesuai desain
                 ->get(),
@@ -56,7 +57,7 @@ new class extends Component {
             </a> --}}
     </div>
     @if ($umkmProfiles->count() > 0)
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6">
             @foreach ($umkmProfiles as $profile)
                 <div
                     class="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden border border-gray-100 group">

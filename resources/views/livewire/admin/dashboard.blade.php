@@ -41,7 +41,7 @@ new class extends Component {
     }
 }; ?>
 
-<div class="space-y-6">
+<div class="max-w-7xl mx-auto p-4 space-y-6">
     <!-- Page Header -->
     <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
