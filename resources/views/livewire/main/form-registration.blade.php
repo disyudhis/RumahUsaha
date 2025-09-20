@@ -91,7 +91,6 @@ new class extends Component {
             $this->resetForm();
             return redirect()->route('home');
         } catch (\Exception $e) {
-            dd($e->getMessage());
             \Log::error('UMKM Registration Error: ' . $e->getMessage());
             session()->flash('error', 'Terjadi kesalahan saat mendaftarkan akun. Silakan coba lagi.');
         } finally {
