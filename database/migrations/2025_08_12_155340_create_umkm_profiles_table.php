@@ -20,6 +20,7 @@ return new class extends Migration {
             $table->string('instagram')->nullable();
             $table->text('description')->nullable();
             $table->string('logo')->nullable();
+            $table->string('link_website')->nullable();
             $table->boolean('is_active')->default(true);
             $table->boolean('is_approved')->default(false);
             $table->timestamps();

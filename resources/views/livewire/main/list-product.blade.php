@@ -15,9 +15,29 @@ new class extends Component {
     public $categories = [
         'kuliner' => '🍽️ Kuliner',
         'fashion' => '👗 Fashion',
-        'jasa' => '✂️ Jasa',
-        'kerajinan' => '🧶 Kerajinan',
+        'jasa' => '🛠️ Jasa dan Layanan',
+        'kerajinan' => '🎨 Kerajinan dan Seni',
+        'kecantikan' => '💄 Kecantikan dan Perawatan Diri',
+        'kesehatan' => '🌿 Kesehatan dan Herbal',
+        'pariwisata' => '🏛️ Pariwisata dan Kearifan Lokal',
+        'pertanian' => '🌾 Komoditas Pertanian dan Peternakan, perkebunan dan perikanan',
+        'digital' => '💻 Otomotif, Produk Digital, dan Elektronik',
+        'edukasi' => '📚 Edukasi dan Pelatihan',
         'lainnya' => '⭐ Lainnya',
+    ];
+
+    // Array untuk gambar hero carousel dengan class positioning
+    public $heroImages = [
+        [
+            'path' => 'assets/bg.jpg',
+            'class' => 'hero-img-top', // untuk gambar landscape standar
+            'alt' => 'UMKM Hero 1'
+        ],
+        [
+            'path' => 'assets/bg2.jpg',
+            'class' => 'hero-img-center', // untuk gambar yang fokus di bagian atas
+            'alt' => 'UMKM Hero 2'
+        ],
     ];
 
     public function updatedSearch()
@@ -65,22 +85,36 @@ new class extends Component {
 }; ?>
 
 <div>
-    {{-- Hero Section --}}
+    {{-- Hero Section with Image Carousel --}}
     <div class="relative mb-8">
         <div class="container mx-auto">
-            <!-- Hero Section dengan Background Image -->
-            <div class="min-h-[400px] lg:min-h-[700px]">
-                <!-- Background Image -->
-                <div class="absolute inset-0">
-                    <img src="{{ asset('assets/bg.jpg') }}" alt="UMKM Hero"
-                        class="w-full h-full object-cover object-top">
+            <!-- Hero Section dengan Background Image Carousel -->
+            <div class="min-h-[400px] lg:min-h-[700px] overflow-hidden">
+
+                <!-- Image Carousel -->
+                <div class="hero-carousel absolute inset-0">
+                    @foreach($heroImages as $index => $imageData)
+                        <div class="carousel-slide absolute inset-0 transition-opacity duration-1000 ease-in-out {{ $index === 0 ? 'opacity-100' : 'opacity-0' }}"
+                             data-slide="{{ $index }}">
+                            <img src="{{ asset($imageData['path']) }}" alt="{{ $imageData['alt'] }}"
+                                class="w-full h-full {{ $imageData['class'] }}">
+                        </div>
+                    @endforeach
+                </div>
+
+                <!-- Carousel Navigation Dots -->
+                <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20 flex space-x-3">
+                    @foreach($heroImages as $index => $imageData)
+                        <button class="carousel-dot w-3 h-3 rounded-full transition-all duration-300 {{ $index === 0 ? 'bg-white' : 'bg-white/50' }}"
+                                data-slide="{{ $index }}"></button>
+                    @endforeach
                 </div>
 
                 <!-- Gradient Overlay dari kiri ke tengah -->
-                <div class="absolute inset-0 lg:bg-gradient-to-r lg:from-fix-200 lg:via-fix-200/50 lg:to-transparent sm:bg-gradient-to-r sm:from-fix-200 sm:via-fix-300/10 sm:to-fix-100/70 bg-gradient-to-r from-fix-200 via-fix-200/50 to-transparent"></div>
+                <div class="absolute inset-0 lg:bg-gradient-to-r lg:from-fix-200 lg:via-fix-200/50 lg:to-transparent sm:bg-gradient-to-r sm:from-fix-200 sm:via-fix-300/10 sm:to-fix-100/70 bg-gradient-to-r from-fix-200 via-fix-200/50 to-transparent z-10"></div>
 
                 <!-- Content -->
-                <div class="relative z-10 h-full flex items-center">
+                <div class="relative z-20 h-full flex items-center">
                     <div class="w-full lg:w-1/2 p-8 lg:p-24">
                         <h1
                             class="text-4xl font-aleo lg:text-5xl xl:text-6xl font-bold text-black mb-6 leading-tight">
@@ -88,7 +122,7 @@ new class extends Component {
                             <span class="text-primary-600">Untuk Negeri</span>
                         </h1>
                         <p class="text-lg lg:text-xl font-acme text-black mb-8 max-w-lg">
-                            Etalase Digital UMKM Komunitas Anda
+                            Etalase Digital UMKM Anda
                         </p>
 
                         <!-- Search Form -->
@@ -116,12 +150,12 @@ new class extends Component {
     <div class="px-4 sm:px-6">
         <div class="flex flex-wrap justify-center gap-3 mb-8">
             <button wire:click="clearFilters"
-                class="px-6 py-2.5 rounded-full text-sm font-medium transition-all duration-200 {{ !$category ? 'bg-secondary-800 text-white shadow-md' : 'bg-white text-gray-600 hover:bg-orange-50 hover:text-orange-600 border border-gray-200' }}">
+                class="px-4 py-2.5 rounded-full text-xs sm:text-sm font-medium transition-all duration-200 {{ !$category ? 'bg-secondary-800 text-white shadow-md' : 'bg-white text-gray-600 hover:bg-orange-50 hover:text-orange-600 border border-gray-200' }}">
                 🏠 Semua
             </button>
             @foreach ($categories as $key => $label)
                 <button wire:click="setCategory('{{ $key }}')"
-                    class="px-6 py-2.5 rounded-full text-sm font-medium transition-all duration-200 {{ $category === $key ? 'bg-secondary-800 text-white shadow-md' : 'bg-white text-gray-600 hover:bg-orange-50 hover:text-orange-600 border border-gray-200' }}">
+                    class="px-4 py-2.5 rounded-full text-xs sm:text-sm font-medium transition-all duration-200 whitespace-nowrap {{ $category === $key ? 'bg-secondary-800 text-white shadow-md' : 'bg-white text-gray-600 hover:bg-orange-50 hover:text-orange-600 border border-gray-200' }}">
                     {{ $label }}
                 </button>
             @endforeach
@@ -306,5 +340,159 @@ new class extends Component {
         .aspect-square {
             aspect-ratio: 1 / 1;
         }
+
+        .carousel-slide {
+            transition: opacity 1s ease-in-out;
+        }
+
+        .carousel-dot {
+            cursor: pointer;
+        }
+
+        .carousel-dot:hover {
+            bg-white;
+        }
+
+        /* Hero Image Positioning Classes */
+        .hero-img-center {
+            object-position: center center;
+            object-fit: contain;
+        }
+
+        .hero-img-top {
+            object-position: center top;
+            object-fit: cover;
+        }
+
+        .hero-img-bottom {
+            object-position: center bottom;
+        }
+
+        .hero-img-left {
+            object-position: left center;
+        }
+
+        .hero-img-right {
+            object-position: right center;
+        }
+
+        .hero-img-top-left {
+            object-position: left top;
+        }
+
+        .hero-img-top-right {
+            object-position: right top;
+        }
+
+        .hero-img-bottom-left {
+            object-position: left bottom;
+        }
+
+        .hero-img-bottom-right {
+            object-position: right bottom;
+        }
+
+        /* Untuk gambar portrait yang ingin di-crop dengan fokus wajah/objek utama */
+        .hero-img-face-focus {
+            object-position: center 25%;
+        }
+
+        /* Untuk gambar landscape yang terlalu lebar */
+        .hero-img-crop-sides {
+            object-position: center center;
+            object-fit: cover;
+        }
+
+        /* Untuk gambar yang ingin dipertahankan aspect ratio tanpa crop */
+        .hero-img-contain {
+            object-fit: contain;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        /* Untuk gambar dengan overlay gradasi khusus */
+        .hero-img-with-overlay {
+            position: relative;
+        }
+
+        .hero-img-with-overlay::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.1) 100%);
+            pointer-events: none;
+        }
     </style>
+@endpush
+
+@push('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const slides = document.querySelectorAll('.carousel-slide');
+            const dots = document.querySelectorAll('.carousel-dot');
+            let currentSlide = 0;
+            let isTransitioning = false;
+
+            if (slides.length === 0) return;
+
+            function showSlide(index) {
+                if (isTransitioning) return;
+
+                isTransitioning = true;
+
+                // Hide all slides
+                slides.forEach((slide, i) => {
+                    slide.style.opacity = i === index ? '1' : '0';
+                });
+
+                // Update dots
+                dots.forEach((dot, i) => {
+                    if (i === index) {
+                        dot.classList.remove('bg-white/50');
+                        dot.classList.add('bg-white');
+                    } else {
+                        dot.classList.remove('bg-white');
+                        dot.classList.add('bg-white/50');
+                    }
+                });
+
+                currentSlide = index;
+
+                setTimeout(() => {
+                    isTransitioning = false;
+                }, 1000);
+            }
+
+            function nextSlide() {
+                const next = (currentSlide + 1) % slides.length;
+                showSlide(next);
+            }
+
+            // Auto-advance carousel every 5 seconds
+            setInterval(nextSlide, 5000);
+
+            // Manual dot navigation
+            dots.forEach((dot, index) => {
+                dot.addEventListener('click', () => {
+                    showSlide(index);
+                });
+            });
+
+            // Pause on hover (optional)
+            const heroSection = document.querySelector('.hero-carousel');
+            let autoAdvance = setInterval(nextSlide, 5000);
+
+            if (heroSection) {
+                heroSection.addEventListener('mouseenter', () => {
+                    clearInterval(autoAdvance);
+                });
+
+                heroSection.addEventListener('mouseleave', () => {
+                    autoAdvance = setInterval(nextSlide, 5000);
+                });
+            }
+        });
+    </script>
 @endpush

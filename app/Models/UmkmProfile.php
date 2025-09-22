@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Storage;
 
 class UmkmProfile extends Model
 {
-    protected $fillable = ['user_id', 'business_name', 'owner_name', 'address', 'whatsapp', 'instagram', 'description', 'logo', 'is_active', 'is_approved'];
+    protected $fillable = ['user_id', 'business_name', 'owner_name', 'address', 'whatsapp', 'instagram', 'description', 'link_website', 'logo', 'is_active', 'is_approved'];
 
     protected $casts = [
         'is_active' => 'boolean',

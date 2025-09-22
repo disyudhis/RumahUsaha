@@ -270,7 +270,7 @@ new class extends Component {
                                 </div>
                                 <span class="text-neutral-700 font-medium">Bergabung</span>
                             </div>
-                            <span class="font-bold text-neutral-600">{{ $umkm->created_at->format('M Y') }}</span>
+                            <span class="font-bold text-neutral-600">{{ $umkm->created_at->format('D,d M Y') }}</span>
                         </div>
 
                         <div class="flex items-center justify-between p-3 bg-success-50 rounded-lg">

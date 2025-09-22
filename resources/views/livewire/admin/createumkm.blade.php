@@ -143,6 +143,7 @@ new class extends Component {
                     'email' => $this->email,
                     'password' => Hash::make($this->password),
                     'user_type' => User::ROLE_UMKM_OWNER,
+                    'is_approved' => true,
                 ]);
 
                 // Prepare UMKM profile data
@@ -154,6 +155,7 @@ new class extends Component {
                     'whatsapp' => $this->whatsapp ?: null,
                     'instagram' => $this->instagram ?: null,
                     'description' => $this->description ?: null,
+                    'is_approved' => true,
                 ];
 
                 // Handle logo upload

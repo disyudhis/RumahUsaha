@@ -8,10 +8,15 @@ class Product extends Model
 {
     const CATEGORIES = [
         'kuliner' => 'Kuliner',
-        'jasa' => 'Jasa',
-        'digital' => 'Digital',
         'fashion' => 'Fashion',
-        'kerajinan' => 'Kerajinan',
+        'jasa' => 'Jasa dan Layanan',
+        'kerajinan' => 'Kerajinan dan Seni',
+        'kecantikan' => 'Kecantikan dan Perawatan Diri',
+        'kesehatan' => 'Kesehatan dan Herbal',
+        'pariwisata' => 'Pariwisata dan Kearifan Lokal',
+        'pertanian' => 'Komoditas Pertanian dan Peternakan, perkebunan dan perikanan',
+        'digital' => 'Otomotif, Produk Digital, dan Elektronik',
+        'edukasi' => 'Edukasi dan Pelatihan',
         'lainnya' => 'Lainnya',
     ];
     protected $fillable = ['name', 'description', 'price', 'category', 'image', 'umkm_profile_id', 'is_active'];
