@@ -38,6 +38,16 @@ new class extends Component {
             'class' => 'hero-img-center', // untuk gambar yang fokus di bagian atas
             'alt' => 'UMKM Hero 2'
         ],
+        [
+            'path' => 'assets/bg3.jpg',
+            'class' => 'hero-img-center', // untuk gambar yang fokus di bagian atas
+            'alt' => 'UMKM Hero 2'
+        ],
+        [
+            'path' => 'assets/bg4.jpg',
+            'class' => 'hero-img-center', // untuk gambar yang fokus di bagian atas
+            'alt' => 'UMKM Hero 2'
+        ],
     ];
 
     public function updatedSearch()
@@ -356,7 +366,7 @@ new class extends Component {
         /* Hero Image Positioning Classes */
         .hero-img-center {
             object-position: center center;
-            object-fit: contain;
+            object-fit: cover;
         }
 
         .hero-img-top {

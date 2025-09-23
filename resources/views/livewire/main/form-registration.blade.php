@@ -42,10 +42,23 @@ new class extends Component {
             'address' => ['required', 'string', 'min:10', 'max:500'],
             'whatsapp' => ['required', 'string', 'regex:/^[8][0-9]{8,12}$/'],
             'instagram' => ['nullable', 'string', 'max:30', 'regex:/^[a-zA-Z0-9._]+$/'],
-            'description' => ['required', 'string', 'min:50', 'max:1000'],
+            'description' => ['required', 'string', 'max:1000'],
             'logo' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
-            'terms' => ['required', 'accepted'],
         ];
+    }
+
+    public function updatedName($value)
+    {
+        // Auto-fill owner name jika belum diisi
+        if (empty($this->owner_name)) {
+            $this->owner_name = $value;
+        }
+    }
+
+    // Tambahkan computed property untuk memberikan opsi
+    public function canAutoFillOwner()
+    {
+        return !empty($this->name) && empty($this->owner_name);
     }
 
     public function submit()
@@ -57,6 +70,9 @@ new class extends Component {
         $this->isSubmitting = true;
 
         try {
+            // Reset errors sebelum validasi
+            $this->resetErrorBag();
+
             $validatedData = $this->validate();
 
             DB::transaction(function () use ($validatedData) {
@@ -90,6 +106,12 @@ new class extends Component {
             session()->flash('success', 'Pendaftaran berhasil! Akun Anda akan diaktifkan setelah disetujui oleh admin.');
             $this->resetForm();
             return redirect()->route('home');
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // Tangkap validation exception khusus
+            \Log::error('Validation Error: ', $e->errors());
+
+            // Scroll ke error pertama
+            $this->dispatch('scrollToError');
         } catch (\Exception $e) {
             \Log::error('UMKM Registration Error: ' . $e->getMessage());
             session()->flash('error', 'Terjadi kesalahan saat mendaftarkan akun. Silakan coba lagi.');
@@ -98,7 +120,7 @@ new class extends Component {
         }
     }
 
-    private function resetForm(): void
+    private function resetForm()
     {
         $this->reset(['name', 'email', 'password', 'password_confirmation', 'business_name', 'owner_name', 'address', 'whatsapp', 'instagram', 'description', 'logo', 'terms']);
     }
@@ -178,8 +200,34 @@ new class extends Component {
                 </div>
 
                 <form wire:submit="submit" enctype="multipart/form-data" class="p-6 sm:p-8 space-y-8">
-                    {{-- Account Information Section --}}
+                    {{-- Progress Indicator --}}
+                    <div class="mb-8 bg-white rounded-lg p-4 shadow-sm border border-accent-200">
+                        <div class="flex items-center justify-between text-sm">
+                            <div class="flex items-center">
+                                <div
+                                    class="w-6 h-6 bg-primary-500 text-white rounded-full flex items-center justify-center text-xs mr-2">
+                                    1</div>
+                                <span class="text-primary-600 font-medium">Informasi Akun</span>
+                            </div>
+                            <div class="flex items-center">
+                                <div
+                                    class="w-6 h-6 bg-primary-500 text-white rounded-full flex items-center justify-center text-xs mr-2">
+                                    2</div>
+                                <span class="text-primary-600 font-medium">Profil Bisnis</span>
+                            </div>
+                            <div class="flex items-center">
+                                <div
+                                    class="w-6 h-6 bg-accent-300 text-white rounded-full flex items-center justify-center text-xs mr-2">
+                                    3</div>
+                                <span class="text-accent-600">Selesai</span>
+                            </div>
+                        </div>
+                        <div class="mt-3 bg-accent-200 rounded-full h-2">
+                            <div class="bg-primary-500 h-2 rounded-full" style="width: 66%"></div>
+                        </div>
+                    </div>
                     <div>
+                        {{-- Account Information Section dengan penjelasan --}}
                         <div class="flex items-center mb-6">
                             <div
                                 class="w-8 h-8 bg-primary-100 text-primary-600 rounded-full flex items-center justify-center mr-3">
@@ -190,7 +238,7 @@ new class extends Component {
                             </div>
                             <div>
                                 <h2 class="text-xl font-semibold text-secondary-800">Informasi Akun</h2>
-                                <p class="text-sm text-secondary-600">Data untuk login ke platform</p>
+                                <p class="text-sm text-secondary-600">Data pribadi Anda untuk login ke platform</p>
                             </div>
                         </div>
 
@@ -221,18 +269,19 @@ new class extends Component {
                                 @enderror
                             </div>
 
-                            {{-- Password --}}
+                            {{-- Password dengan real-time validation --}}
                             <div class="sm:col-span-1">
                                 <label for="password" class="block text-sm font-medium text-secondary-700 mb-2">
                                     Password <span class="text-red-500">*</span>
                                 </label>
                                 <div class="relative">
-                                    <input type="password" id="password" wire:model.blur="password" required
+                                    <input type="password" id="password" wire:model.live="password" required
                                         class="w-full px-4 py-3 pr-12 border border-accent-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors @error('password') border-red-300 @enderror"
                                         placeholder="Minimal 8 karakter">
                                     <button type="button" onclick="togglePassword('password')"
                                         class="absolute right-3 top-1/2 -translate-y-1/2 text-secondary-400 hover:text-secondary-600">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                 d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -240,6 +289,31 @@ new class extends Component {
                                         </svg>
                                     </button>
                                 </div>
+
+                                {{-- Password strength indicator --}}
+                                @if (!empty($password))
+                                    <div class="mt-2 space-y-1">
+                                        <div class="flex items-center text-xs">
+                                            <span
+                                                class="@if (strlen($password) >= 8) text-green-600 @else text-red-600 @endif">
+                                                ✓ Minimal 8 karakter
+                                            </span>
+                                        </div>
+                                        <div class="flex items-center text-xs">
+                                            <span
+                                                class="@if (preg_match('/[a-z]/', $password) && preg_match('/[A-Z]/', $password)) text-green-600 @else text-red-600 @endif">
+                                                ✓ Huruf besar dan kecil
+                                            </span>
+                                        </div>
+                                        <div class="flex items-center text-xs">
+                                            <span
+                                                class="@if (preg_match('/[0-9]/', $password)) text-green-600 @else text-red-600 @endif">
+                                                ✓ Mengandung angka
+                                            </span>
+                                        </div>
+                                    </div>
+                                @endif
+
                                 @error('password')
                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
@@ -283,7 +357,8 @@ new class extends Component {
                             </div>
                             <div>
                                 <h2 class="text-xl font-semibold text-secondary-800">Profil Bisnis</h2>
-                                <p class="text-sm text-secondary-600">Informasi tentang usaha Anda</p>
+                                <p class="text-sm text-secondary-600">Informasi tentang usaha yang akan Anda daftarkan
+                                </p>
                             </div>
                         </div>
 
@@ -301,13 +376,25 @@ new class extends Component {
                                 @enderror
                             </div>
 
-                            {{-- Owner Name --}}
+                            {{-- Owner Name dengan auto-fill helper --}}
                             <div>
                                 <label for="owner_name" class="block text-sm font-medium text-secondary-700 mb-2">
                                     Nama Pemilik <span class="text-red-500">*</span>
                                 </label>
-                                <input type="text" id="owner_name" wire:model.blur="owner_name" required
-                                    class="w-full px-4 py-3 border border-accent-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors @error('owner_name') border-red-300 @enderror"
+
+                                @if ($this->canAutoFillOwner())
+                                    <div class="mb-2 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                                        <p class="text-sm text-blue-700 mb-2">Apakah nama pemilik sama dengan nama
+                                            akun?</p>
+                                        <button type="button" wire:click="$set('owner_name', '{{ $name }}')"
+                                            class="text-xs bg-blue-100 text-blue-700 px-3 py-1 rounded-full hover:bg-blue-200">
+                                            Gunakan "{{ $name }}"
+                                        </button>
+                                    </div>
+                                @endif
+
+                                <input type="text" id="owner_name" wire:model.blur="owner_name" required disabled
+                                    class="w-full px-4 py-3 border bg-gray-50 border-accent-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors @error('owner_name') border-red-300 @enderror"
                                     placeholder="Nama pemilik usaha">
                                 @error('owner_name')
                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -442,7 +529,7 @@ new class extends Component {
                     </div>
 
                     {{-- Terms and Conditions --}}
-                    <div class="border-t border-accent-200 pt-8">
+                    {{-- <div class="border-t border-accent-200 pt-8">
                         <div class="flex items-start space-x-3">
                             <input type="checkbox" id="terms" wire:model="terms" required
                                 class="w-4 h-4 mt-1 text-primary-600 bg-white border-accent-300 rounded focus:ring-primary-500 focus:ring-2">
@@ -458,7 +545,7 @@ new class extends Component {
                         @error('terms')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
-                    </div>
+                    </div> --}}
 
                     {{-- Submit Button --}}
                     <div class="border-t border-accent-200 pt-8">
@@ -491,6 +578,25 @@ new class extends Component {
                         </div>
                     </div>
                 </form>
+            </div>
+
+            <div class="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-6">
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        <svg class="h-5 w-5 text-amber-400" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd"
+                                d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+                                clip-rule="evenodd" />
+                        </svg>
+                    </div>
+                    <div class="ml-3">
+                        <p class="text-sm text-amber-700">
+                            <strong>Nama Lengkap</strong> adalah nama Anda sebagai pemilik akun. <br>
+                            <strong>Nama Pemilik</strong> adalah nama yang akan ditampilkan sebagai pemilik usaha (bisa
+                            sama atau berbeda).
+                        </p>
+                    </div>
+                </div>
             </div>
 
             {{-- Loading Overlay --}}
