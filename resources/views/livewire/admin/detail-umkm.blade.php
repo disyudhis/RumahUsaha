@@ -296,8 +296,8 @@ new class extends Component {
                                     <div
                                         class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
                                         <div class="flex items-start space-x-3">
-                                            @if ($product->image_url)
-                                                <img src="{{ $product->image_url }}" alt="{{ $product->name }}"
+                                            @if ($product->image)
+                                                <img src="{{ $product->image }}" alt="{{ $product->name }}"
                                                     class="w-16 h-16 rounded-lg object-cover flex-shrink-0">
                                             @else
                                                 <div

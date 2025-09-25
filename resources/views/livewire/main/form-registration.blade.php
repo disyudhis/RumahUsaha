@@ -1,5 +1,4 @@
 <?php
-
 use Livewire\Volt\Component;
 use Livewire\WithFileUploads;
 use App\Models\User;
@@ -22,6 +21,8 @@ new class extends Component {
     public $business_name = '';
     public $owner_name = '';
     public $address = '';
+    public $kecamatan = '';
+    public $category = '';
     public $whatsapp = '';
     public $instagram = '';
     public $description = '';
@@ -40,6 +41,8 @@ new class extends Component {
             'business_name' => ['required', 'string', 'max:255', 'min:3'],
             'owner_name' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z\s]+$/'],
             'address' => ['required', 'string', 'min:10', 'max:500'],
+            'kecamatan' => ['required', 'string', 'max:100'],
+            'category' => ['required', 'string', 'in:' . implode(',', array_keys(UmkmProfile::CATEGORIES))],
             'whatsapp' => ['required', 'string', 'regex:/^[8][0-9]{8,12}$/'],
             'instagram' => ['nullable', 'string', 'max:30', 'regex:/^[a-zA-Z0-9._]+$/'],
             'description' => ['required', 'string', 'max:1000'],
@@ -59,6 +62,11 @@ new class extends Component {
     public function canAutoFillOwner()
     {
         return !empty($this->name) && empty($this->owner_name);
+    }
+
+    public function getCategories()
+    {
+        return UmkmProfile::CATEGORIES;
     }
 
     public function submit()
@@ -94,6 +102,8 @@ new class extends Component {
                     'business_name' => $validatedData['business_name'],
                     'owner_name' => $validatedData['owner_name'],
                     'address' => $validatedData['address'],
+                    'kecamatan' => $validatedData['kecamatan'],
+                    'categories' => $validatedData['category'],
                     'whatsapp' => $validatedData['whatsapp'],
                     'instagram' => $validatedData['instagram'],
                     'description' => $validatedData['description'],
@@ -103,9 +113,11 @@ new class extends Component {
                 ]);
             });
 
-            session()->flash('success', 'Pendaftaran berhasil! Akun Anda akan diaktifkan setelah disetujui oleh admin.');
+            session()->flash('success', 'Pendaftaran berhasil! Akun Anda sedang menunggu persetujuan dari admin. Kami akan mengirimkan notifikasi melalui email setelah akun disetujui.');
             $this->resetForm();
-            return redirect()->route('home');
+
+            // Dispatch event untuk menampilkan modal konfirmasi
+            $this->dispatch('showRegistrationSuccess');
         } catch (\Illuminate\Validation\ValidationException $e) {
             // Tangkap validation exception khusus
             \Log::error('Validation Error: ', $e->errors());
@@ -122,7 +134,7 @@ new class extends Component {
 
     private function resetForm()
     {
-        $this->reset(['name', 'email', 'password', 'password_confirmation', 'business_name', 'owner_name', 'address', 'whatsapp', 'instagram', 'description', 'logo', 'terms']);
+        $this->reset(['name', 'email', 'password', 'password_confirmation', 'business_name', 'owner_name', 'address', 'kecamatan', 'category', 'whatsapp', 'instagram', 'description', 'logo', 'terms']);
     }
 }; ?>
 
@@ -414,6 +426,38 @@ new class extends Component {
                                 @enderror
                             </div>
 
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                {{-- Kecamatan --}}
+                                <div>
+                                    <label for="kecamatan" class="block text-sm font-medium text-secondary-700 mb-2">
+                                        Kecamatan <span class="text-red-500">*</span>
+                                    </label>
+                                    <input type="text" id="kecamatan" wire:model.blur="kecamatan" required
+                                        class="w-full px-4 py-3 border border-accent-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors @error('kecamatan') border-red-300 @enderror"
+                                        placeholder="Contoh: Kecamatan Sukajadi">
+                                    @error('kecamatan')
+                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                    @enderror
+                                </div>
+
+                                {{-- Category --}}
+                                <div>
+                                    <label for="category" class="block text-sm font-medium text-secondary-700 mb-2">
+                                        Kategori Usaha <span class="text-red-500">*</span>
+                                    </label>
+                                    <select id="category" wire:model.blur="category" required
+                                        class="w-full px-4 py-3 border border-accent-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors @error('category') border-red-300 @enderror">
+                                        <option value="">Pilih kategori usaha</option>
+                                        @foreach ($this->getCategories() as $key => $value)
+                                            <option value="{{ $key }}">{{ $value }}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('category')
+                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                    @enderror
+                                </div>
+                            </div>
+
                             {{-- Contact Information --}}
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                                 {{-- WhatsApp --}}
@@ -617,6 +661,48 @@ new class extends Component {
                 </div>
             </div>
         </div>
+
+        <div id="successModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50"
+            style="display: none;">
+            <div class="bg-white rounded-lg p-8 max-w-md mx-4 text-center">
+                <div class="mb-4">
+                    <div class="w-16 h-16 bg-green-100 rounded-full mx-auto flex items-center justify-center mb-4">
+                        <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7">
+                            </path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-semibold text-secondary-800 mb-2">Pendaftaran Berhasil!</h3>
+                    <p class="text-secondary-600 mb-6">
+                        Terima kasih telah mendaftar. Akun Anda sedang menunggu persetujuan dari admin.
+                        Kami akan mengirimkan notifikasi melalui email setelah akun disetujui.
+                    </p>
+                    <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+                        <div class="flex items-start">
+                            <svg class="w-5 h-5 text-blue-400 mt-0.5 mr-2 flex-shrink-0" fill="currentColor"
+                                viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                                    clip-rule="evenodd"></path>
+                            </svg>
+                            <div class="text-left text-sm text-blue-700">
+                                <p class="font-medium mb-1">Langkah selanjutnya:</p>
+                                <ul class="space-y-1">
+                                    <li>• Admin akan meninjau pendaftaran Anda</li>
+                                    <li>• Proses persetujuan maksimal 1x24 jam</li>
+                                    <li>• Cek email Anda secara berkala</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button onclick="closeSuccessModal()"
+                    class="w-full bg-fix-400 text-white px-6 py-3 rounded-lg font-semibold hover:bg-fix-500 transition-colors">
+                    Kembali ke Beranda
+                </button>
+            </div>
+        </div>
     </div>
 
     {{-- JavaScript for UI enhancements --}}
@@ -671,6 +757,25 @@ new class extends Component {
                         }
                     }, 100);
                 });
+            });
+
+            // Show success modal
+            document.addEventListener('livewire:init', () => {
+                Livewire.on('showRegistrationSuccess', () => {
+                    document.getElementById('successModal').style.display = 'flex';
+                });
+            });
+
+            function closeSuccessModal() {
+                document.getElementById('successModal').style.display = 'none';
+                window.location.href = "{{ route('home') }}";
+            }
+
+            // Close modal when clicking outside
+            document.getElementById('successModal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeSuccessModal();
+                }
             });
         </script>
     @endpush

@@ -52,7 +52,7 @@
                             @php
                                 $generalNav = [
                                     ['route' => 'home', 'label' => 'Home', 'anchor' => null],
-                                    ['route' => 'business.*', 'label' => 'Profil Usaha', 'anchor' => '#list-umkm'],
+                                    ['route' => 'main.*', 'label' => 'Profil Usaha', 'anchor' => '#list-umkm'],
                                     ['route' => 'products.*', 'label' => 'Produk', 'anchor' => '#list-product'],
                                     [
                                         'route' => 'news.*',

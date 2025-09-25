@@ -7,7 +7,20 @@ use Illuminate\Support\Facades\Storage;
 
 class UmkmProfile extends Model
 {
-    protected $fillable = ['user_id', 'business_name', 'owner_name', 'address', 'whatsapp', 'instagram', 'description', 'link_website', 'logo', 'is_active', 'is_approved'];
+     const CATEGORIES = [
+        'kuliner' => 'Kuliner',
+        'fashion' => 'Fashion',
+        'jasa' => 'Jasa dan Layanan',
+        'kerajinan' => 'Kerajinan dan Seni',
+        'kecantikan' => 'Kecantikan dan Perawatan Diri',
+        'kesehatan' => 'Kesehatan dan Herbal',
+        'pariwisata' => 'Pariwisata dan Kearifan Lokal',
+        'pertanian' => 'Komoditas Pertanian dan Peternakan, perkebunan dan perikanan',
+        'digital' => 'Otomotif, Produk Digital, dan Elektronik',
+        'edukasi' => 'Edukasi dan Pelatihan',
+        'lainnya' => 'Lainnya',
+    ];
+    protected $fillable = ['user_id', 'categories', 'kecamatan', 'business_name', 'owner_name', 'address', 'whatsapp', 'instagram', 'description', 'link_website', 'logo', 'is_active', 'is_approved'];
 
     protected $casts = [
         'is_active' => 'boolean',

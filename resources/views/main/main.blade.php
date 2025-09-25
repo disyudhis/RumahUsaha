@@ -22,7 +22,14 @@
     {{-- Business Profiles Section --}}
     <section id="list-umkm" class="mb-12 scroll-mt-20">
 
-        <livewire:main.list-umkm />
+          <livewire:main.list-umkm
+        :show-all="false"
+        :limit="4"
+        :show-pagination="false"
+        :show-header="true"
+        header-title="UMKM Terbaru"
+        :show-view-all-button="true"
+    />
     </section>
 
     {{-- News & Activities --}}
