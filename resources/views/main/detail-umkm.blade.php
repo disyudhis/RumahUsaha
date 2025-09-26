@@ -5,7 +5,7 @@
 @section('description', 'Detail profil dan produk ' . ($business->business_name ?? 'UMKM') . ' di RumahUsaha.id')
 
 @section('content')
-    <livewire:main.detail-umkm :id="$id" />
+    <livewire:main.detail-umkm :slug="$slug" />
 @endsection
 
 @push('styles')
@@ -13,6 +13,7 @@
         .line-clamp-2 {
             overflow: hidden;
             display: -webkit-box;
+            
             -webkit-box-orient: vertical;
             -webkit-line-clamp: 2;
         }

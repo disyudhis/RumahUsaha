@@ -2,11 +2,22 @@
 
 namespace App\Models;
 
+use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 
 class UmkmProfile extends Model
 {
+    use Sluggable;
+
+     public function sluggable(): array
+    {
+        return [
+            'slug' => [
+                'source' => 'business_name'
+            ]
+        ];
+    }
      const CATEGORIES = [
         'kuliner' => 'Kuliner',
         'fashion' => 'Fashion',
@@ -20,7 +31,7 @@ class UmkmProfile extends Model
         'edukasi' => 'Edukasi dan Pelatihan',
         'lainnya' => 'Lainnya',
     ];
-    protected $fillable = ['user_id', 'categories', 'kecamatan', 'business_name', 'owner_name', 'address', 'whatsapp', 'instagram', 'description', 'link_website', 'logo', 'is_active', 'is_approved'];
+    protected $fillable = ['user_id', 'slug', 'categories', 'kecamatan', 'business_name', 'owner_name', 'address', 'whatsapp', 'instagram', 'description', 'link_website', 'logo', 'is_active', 'is_approved'];
 
     protected $casts = [
         'is_active' => 'boolean',

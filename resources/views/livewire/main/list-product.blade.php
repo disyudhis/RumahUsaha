@@ -127,7 +127,7 @@ new class extends Component {
 
     public function showDetailProduct($productId)
     {
-        return $this->redirect(route('main.products.show', ['id' => $productId]), navigate: true);
+        return $this->redirect(route('main.products.show', ['slug' => $productId]), navigate: true);
     }
 
     public function mount($showHero = true, $showAll = false, $limit = 8, $showPagination = false, $showHeader = true, $headerTitle = 'PRODUK TERBARU', $showViewAllButton = false, $viewAllRoute = 'main.products.index', $perPage = 12)
@@ -412,7 +412,7 @@ new class extends Component {
                                 </div>
 
                                 {{-- Action Button --}}
-                                <button wire:click='showDetailProduct({{ $product->id }})'
+                                <button wire:click='showDetailProduct("{{ $product->slug }}")'
                                     class="w-full bg-primary-500 hover:bg-primary-600 text-white font-medium py-3 px-4 rounded-xl transition-all duration-200 group flex items-center justify-center gap-2">
                                     <span>Detail Produk</span>
                                     <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none"

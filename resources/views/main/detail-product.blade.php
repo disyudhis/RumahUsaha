@@ -5,7 +5,7 @@
 @section('description', 'Detail produk ' . ($business->business_name ?? 'PRODUCT') . ' di BIZHOUSE.ID')
 
 @section('content')
-    <livewire:main.detail-product :id="$id" />
+    <livewire:main.detail-product :slug="$slug" />
 @endsection
 
 @push('styles')

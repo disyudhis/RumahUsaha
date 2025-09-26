@@ -93,7 +93,7 @@ new class extends Component {
      */
     public function viewProfile($profileId)
     {
-        return $this->redirect(route('main.umkm.show', ['id' => $profileId]), navigate: true);
+        return $this->redirect(route('main.umkm.show', ['slug' => $profileId]), navigate: true);
     }
 
     /**
@@ -297,7 +297,7 @@ new class extends Component {
                         @endif
 
                         {{-- Action Button --}}
-                        <button wire:click="viewProfile({{ $profile->id }})"
+                        <button wire:click='viewProfile("{{ $profile->slug }}")'
                             class="w-full bg-primary-400 hover:bg-primary-300 text-white font-semibold py-3 px-4 rounded-xl transition-colors duration-200 flex items-center justify-center group-hover:bg-primary-400">
                             Lihat Profil
                         </button>

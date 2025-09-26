@@ -2,10 +2,21 @@
 
 namespace App\Models;
 
+use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {
+    use Sluggable;
+
+     public function sluggable(): array
+    {
+        return [
+            'slug' => [
+                'source' => 'name'
+            ]
+        ];
+    }
     const CATEGORIES = [
         'kuliner' => 'Kuliner',
         'fashion' => 'Fashion',
@@ -19,7 +30,7 @@ class Product extends Model
         'edukasi' => 'Edukasi dan Pelatihan',
         'lainnya' => 'Lainnya',
     ];
-    protected $fillable = ['name', 'description', 'price', 'category', 'image', 'umkm_profile_id', 'is_active'];
+    protected $fillable = ['name', 'slug', 'description', 'price', 'category', 'image', 'umkm_profile_id', 'is_active'];
 
     /**
      * Get the formatted price.

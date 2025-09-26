@@ -4,13 +4,13 @@ use Livewire\Volt\Component;
 use App\Models\Product;
 
 new class extends Component {
-    public $id;
-    public $product;
+    public Product $product;
+    // public $product;
     public $relatedProducts = [];
 
-    public function mount($id)
+    public function mount($slug)
     {
-        $this->id = $id;
+        $this->product = Product::where('slug', $slug)->firstOrFail();
         $this->loadProduct();
         $this->loadRelatedProducts();
     }
@@ -18,7 +18,7 @@ new class extends Component {
     public function loadProduct()
     {
         $this->product = Product::with(['umkmProfile'])
-            ->where('id', $this->id)
+            ->where('slug', $this->product->slug)
             ->where('is_active', true)
             ->firstOrFail();
     }

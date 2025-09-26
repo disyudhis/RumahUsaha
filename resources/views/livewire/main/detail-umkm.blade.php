@@ -9,13 +9,15 @@ new class extends Component {
     public UmkmProfile $umkm;
     public $testimonials;
 
-    public function mount($id)
+    public function mount($slug)
     {
         $this->umkm = UmkmProfile::with([
             'products' => function ($query) {
                 $query->latest();
             },
-        ])->findOrFail($id);
+        ])
+            ->where('slug', $slug)
+            ->firstOrFail();
 
         $this->loadTestimonials();
     }
@@ -41,8 +43,10 @@ new class extends Component {
     <!-- Header -->
     <div class="bg-white/80 backdrop-blur-sm border-b border-primary-200/50 shadow-warm">
         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-            <button wire:click="goBack" class="flex items-center text-primary-600 hover:text-primary-800 transition-colors group">
-                <svg class="w-5 h-5 mr-2 transition-transform group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <button wire:click="goBack"
+                class="flex items-center text-primary-600 hover:text-primary-800 transition-colors group">
+                <svg class="w-5 h-5 mr-2 transition-transform group-hover:-translate-x-1" fill="none"
+                    stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
                 </svg>
                 <span class="text-sm font-medium">Kembali ke Daftar Usaha</span>
@@ -55,7 +59,8 @@ new class extends Component {
             <!-- Main Content -->
             <div class="lg:col-span-3 space-y-6">
                 <!-- Hero Section with Logo -->
-                <div class="relative bg-white/90 backdrop-blur-sm rounded-2xl shadow-warm-lg border border-primary-200/50 overflow-hidden">
+                <div
+                    class="relative bg-white/90 backdrop-blur-sm rounded-2xl shadow-warm-lg border border-primary-200/50 overflow-hidden">
                     <!-- Hero Image/Logo -->
                     <div class="h-80 bg-gradient-to-br from-accent-100 to-primary-200 relative">
                         @if ($umkm->logo)
@@ -64,8 +69,10 @@ new class extends Component {
                         @else
                             <div class="flex items-center justify-center h-full">
                                 <div class="text-center">
-                                    <div class="w-24 h-24 bg-primary-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                                        <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <div
+                                        class="w-24 h-24 bg-primary-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                                        <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                 d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                                         </svg>
@@ -91,8 +98,10 @@ new class extends Component {
                         <div class="grid grid-cols-1 gap-4">
                             <!-- Location -->
                             <div class="flex items-start space-x-4">
-                                <div class="w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center flex-shrink-0">
-                                    <svg class="w-5 h-5 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <div
+                                    class="w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center flex-shrink-0">
+                                    <svg class="w-5 h-5 text-primary-600" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -107,8 +116,10 @@ new class extends Component {
 
                             <!-- Contact -->
                             <div class="flex items-start space-x-4">
-                                <div class="w-10 h-10 bg-success-100 rounded-full flex items-center justify-center flex-shrink-0">
-                                    <svg class="w-5 h-5 text-success-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <div
+                                    class="w-10 h-10 bg-success-100 rounded-full flex items-center justify-center flex-shrink-0">
+                                    <svg class="w-5 h-5 text-success-600" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                                     </svg>
@@ -116,13 +127,14 @@ new class extends Component {
                                 <div class="space-y-1">
                                     @if ($umkm->whatsapp)
                                         <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $umkm->whatsapp) }}"
-                                            target="_blank" class="block text-success-600 hover:text-success-700 font-medium">
+                                            target="_blank"
+                                            class="block text-success-600 hover:text-success-700 font-medium">
                                             WA: {{ $umkm->whatsapp }}
                                         </a>
                                     @endif
                                     @if ($umkm->instagram)
-                                        <a href="https://instagram.com/{{ ltrim($umkm->instagram, '@') }}" target="_blank"
-                                            class="block text-pink-600 hover:text-pink-700 font-medium">
+                                        <a href="https://instagram.com/{{ ltrim($umkm->instagram, '@') }}"
+                                            target="_blank" class="block text-pink-600 hover:text-pink-700 font-medium">
                                             IG: {{ $umkm->instagram }}
                                         </a>
                                     @endif
@@ -137,7 +149,8 @@ new class extends Component {
                     <div class="bg-white/90 backdrop-blur-sm rounded-2xl shadow-warm border border-primary-200/50 p-8">
                         <h2 class="text-xl font-bold text-neutral-900 mb-4 flex items-center">
                             <div class="w-8 h-8 bg-primary-100 rounded-lg flex items-center justify-center mr-3">
-                                <svg class="w-4 h-4 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg class="w-4 h-4 text-primary-600" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                                 </svg>
@@ -153,7 +166,8 @@ new class extends Component {
                     <div class="bg-white/90 backdrop-blur-sm rounded-2xl shadow-warm border border-primary-200/50 p-8">
                         <h2 class="text-xl font-bold text-neutral-900 mb-6 flex items-center">
                             <div class="w-8 h-8 bg-primary-100 rounded-lg flex items-center justify-center mr-3">
-                                <svg class="w-4 h-4 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg class="w-4 h-4 text-primary-600" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                                 </svg>
@@ -163,12 +177,14 @@ new class extends Component {
 
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                             @foreach ($umkm->products as $product)
-                                <div class="group bg-white rounded-xl border border-primary-200/50 overflow-hidden hover:shadow-warm-lg transition-all duration-300 hover:-translate-y-1">
+                                <div
+                                    class="group bg-white rounded-xl border border-primary-200/50 overflow-hidden hover:shadow-warm-lg transition-all duration-300 hover:-translate-y-1">
                                     <!-- Product Image -->
-                                    <div class="aspect-square bg-gradient-to-br from-accent-100 to-primary-200 relative overflow-hidden">
+                                    <div
+                                        class="aspect-square bg-gradient-to-br from-accent-100 to-primary-200 relative overflow-hidden">
                                         @if ($product->image)
-                                            <img src="{{ Storage::url($product->image) }}"
-                                                alt="{{ $product->name }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                                            <img src="{{ Storage::url($product->image) }}" alt="{{ $product->name }}"
+                                                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
                                         @else
                                             <div class="flex items-center justify-center h-full">
                                                 <div class="text-center text-neutral-400">
@@ -206,7 +222,8 @@ new class extends Component {
             <!-- Sidebar -->
             <div class="lg:col-span-2 space-y-6">
                 <!-- Quick Contact Actions -->
-                <div class="bg-white/90 backdrop-blur-sm rounded-2xl shadow-warm border border-primary-200/50 p-6 top-8">
+                <div
+                    class="bg-white/90 backdrop-blur-sm rounded-2xl shadow-warm border border-primary-200/50 p-6 top-8">
                     <h3 class="font-bold text-neutral-900 text-lg mb-6 text-center">Hubungi Usaha</h3>
                     <div class="space-y-4">
                         @if ($umkm->whatsapp)
@@ -225,7 +242,8 @@ new class extends Component {
                             <a href="https://instagram.com/{{ ltrim($umkm->instagram, '@') }}" target="_blank"
                                 class="flex items-center justify-center w-full bg-gradient-to-r from-pink-500 to-rose-500 text-white px-6 py-3 rounded-xl hover:from-pink-600 hover:to-rose-600 transition-all duration-300 hover:shadow-lg font-medium">
                                 <svg class="w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 24 24">
-                                    <path d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 6.62 5.367 11.987 11.988 11.987 6.62 0 11.987-5.367 11.987-11.987C24.014 5.367 18.637.001 12.017.001zM8.449 16.988c-1.297 0-2.448-.73-3.016-1.797L4.27 17.335l-1.5-1.5 2.144-1.163c-.346-.892-.346-1.884 0-2.776L2.77 10.733l1.5-1.5 1.163 2.144c.568-1.067 1.719-1.797 3.016-1.797s2.448.73 3.016 1.797l1.163-2.144 1.5 1.5-2.144 1.163c.346.892.346 1.884 0 2.776l2.144 1.163-1.5 1.5-1.163-2.144c-.568 1.067-1.719 1.797-3.016 1.797z" />
+                                    <path
+                                        d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 6.62 5.367 11.987 11.988 11.987 6.62 0 11.987-5.367 11.987-11.987C24.014 5.367 18.637.001 12.017.001zM8.449 16.988c-1.297 0-2.448-.73-3.016-1.797L4.27 17.335l-1.5-1.5 2.144-1.163c-.346-.892-.346-1.884 0-2.776L2.77 10.733l1.5-1.5 1.163 2.144c.568-1.067 1.719-1.797 3.016-1.797s2.448.73 3.016 1.797l1.163-2.144 1.5 1.5-2.144 1.163c.346.892.346 1.884 0 2.776l2.144 1.163-1.5 1.5-1.163-2.144c-.568 1.067-1.719 1.797-3.016 1.797z" />
                                 </svg>
                                 Follow Instagram
                             </a>
@@ -240,8 +258,10 @@ new class extends Component {
                         <div class="flex items-center justify-between p-3 bg-primary-50 rounded-lg">
                             <div class="flex items-center">
                                 <div class="w-8 h-8 bg-primary-500 rounded-lg flex items-center justify-center mr-3">
-                                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                                     </svg>
                                 </div>
                                 <span class="text-neutral-700 font-medium">Total Produk</span>
@@ -252,8 +272,10 @@ new class extends Component {
                         <div class="flex items-center justify-between p-3 bg-accent-50 rounded-lg">
                             <div class="flex items-center">
                                 <div class="w-8 h-8 bg-yellow-500 rounded-lg flex items-center justify-center mr-3">
-                                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                                     </svg>
                                 </div>
                                 <span class="text-neutral-700 font-medium">Testimoni</span>
@@ -264,8 +286,10 @@ new class extends Component {
                         <div class="flex items-center justify-between p-3 bg-neutral-50 rounded-lg">
                             <div class="flex items-center">
                                 <div class="w-8 h-8 bg-neutral-500 rounded-lg flex items-center justify-center mr-3">
-                                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                     </svg>
                                 </div>
                                 <span class="text-neutral-700 font-medium">Bergabung</span>
@@ -276,13 +300,16 @@ new class extends Component {
                         <div class="flex items-center justify-between p-3 bg-success-50 rounded-lg">
                             <div class="flex items-center">
                                 <div class="w-8 h-8 bg-success-500 rounded-lg flex items-center justify-center mr-3">
-                                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                                     </svg>
                                 </div>
                                 <span class="text-neutral-700 font-medium">Status</span>
                             </div>
-                            <span class="px-3 py-1 rounded-full text-xs font-bold {{ $umkm->is_active ? 'bg-success-500 text-white' : 'bg-red-500 text-white' }}">
+                            <span
+                                class="px-3 py-1 rounded-full text-xs font-bold {{ $umkm->is_active ? 'bg-success-500 text-white' : 'bg-red-500 text-white' }}">
                                 {{ $umkm->is_active ? 'Aktif' : 'Tidak Aktif' }}
                             </span>
                         </div>
@@ -294,7 +321,8 @@ new class extends Component {
                     <div class="bg-white/90 backdrop-blur-sm rounded-2xl shadow-warm border border-primary-200/50 p-6">
                         <h3 class="font-bold text-neutral-900 text-lg mb-6 flex items-center">
                             <div class="w-8 h-8 bg-yellow-100 rounded-lg flex items-center justify-center mr-3">
-                                <svg class="w-4 h-4 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg class="w-4 h-4 text-yellow-600" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                                 </svg>
@@ -307,8 +335,10 @@ new class extends Component {
                                 <div class="bg-primary-50 border border-primary-200 p-4 rounded-xl">
                                     <div class="flex items-start justify-between mb-3">
                                         <div>
-                                            <p class="font-semibold text-neutral-900">{{ $testimonial->customer_name }}</p>
-                                            <p class="text-sm text-neutral-600">{{ $testimonial->product->name ?? 'Produk' }}</p>
+                                            <p class="font-semibold text-neutral-900">
+                                                {{ $testimonial->customer_name }}</p>
+                                            <p class="text-sm text-neutral-600">
+                                                {{ $testimonial->product->name ?? 'Produk' }}</p>
                                         </div>
                                         @if ($testimonial->rating)
                                             <div class="flex items-center">
