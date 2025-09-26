@@ -93,7 +93,7 @@ new class extends Component {
      */
     public function viewProfile($profileId)
     {
-        return $this->redirect(route('business.show', ['id' => $profileId]), navigate: true);
+        return $this->redirect(route('main.umkm.show', ['id' => $profileId]), navigate: true);
     }
 
     /**

@@ -52,8 +52,8 @@
                             @php
                                 $generalNav = [
                                     ['route' => 'home', 'label' => 'Home', 'anchor' => null],
-                                    ['route' => 'main.*', 'label' => 'Profil Usaha', 'anchor' => '#list-umkm'],
-                                    ['route' => 'products.*', 'label' => 'Produk', 'anchor' => '#list-product'],
+                                    ['route' => 'main.umkm.*', 'label' => 'Profil Usaha', 'anchor' => '#list-umkm'],
+                                    ['route' => 'main.products.*', 'label' => 'Produk', 'anchor' => '#list-product'],
                                     [
                                         'route' => 'news.*',
                                         'label' => 'Berita & Kegiatan Komunitas',

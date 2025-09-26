@@ -15,21 +15,15 @@
 
 @section('content')
     {{-- Hero Section & Product Section Combined --}}
-    <section>
-        <livewire:main.list-product />
-    </section>
+    <livewire:main.list-product :show-hero="true" :show-all="false" :limit="8" :show-pagination="false" :show-header="true"
+        header-title="PRODUK TERBARU" :show-view-all-button="true" view-all-route="main.products.index" />
+
 
     {{-- Business Profiles Section --}}
     <section id="list-umkm" class="mb-12 scroll-mt-20">
 
-          <livewire:main.list-umkm
-        :show-all="false"
-        :limit="4"
-        :show-pagination="false"
-        :show-header="true"
-        header-title="UMKM Terbaru"
-        :show-view-all-button="true"
-    />
+        <livewire:main.list-umkm :show-all="false" :limit="4" :show-pagination="false" :show-header="true"
+            header-title="UMKM Terbaru" :show-view-all-button="true" />
     </section>
 
     {{-- News & Activities --}}
