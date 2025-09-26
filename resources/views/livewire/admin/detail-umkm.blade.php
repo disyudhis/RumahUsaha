@@ -12,6 +12,27 @@ new class extends Component {
     public $showEditModal = false;
     public $showDeleteModal = false;
     public $showApprovalModal = false;
+    public $showProductModal = false;
+    public $showDeleteProductModal = false;
+    public $editingProduct = null;
+
+    // Product form properties
+    #[Validate('required|string|max:255')]
+    public $product_name = '';
+
+    #[Validate('nullable|string')]
+    public $product_description = '';
+
+    #[Validate('nullable|numeric|min:0')]
+    public $product_price = '';
+
+    #[Validate('required|string')]
+    public $product_category = '';
+
+    #[Validate('nullable|image|max:2048')]
+    public $product_image;
+
+    public $product_is_active = true;
 
     // Edit form properties
     #[Validate('required|string|max:255')]
@@ -39,6 +60,141 @@ new class extends Component {
     public $new_logo;
 
     public $is_active = true;
+
+    // Tambahkan method untuk inisialisasi form produk
+    public function initializeProductForm()
+    {
+        $this->product_name = '';
+        $this->product_description = '';
+        $this->product_price = '';
+        $this->product_category = '';
+        $this->product_image = null;
+        $this->product_is_active = true;
+    }
+
+    // Method untuk menampilkan modal tambah produk
+    public function showAddProductModal()
+    {
+        $this->editingProduct = null;
+        $this->initializeProductForm();
+        $this->showProductModal = true;
+    }
+
+    // Method untuk menampilkan modal edit produk
+    public function editProduct($productId)
+    {
+        $product = $this->umkm->products()->findOrFail($productId);
+        $this->editingProduct = $product;
+
+        $this->product_name = $product->name;
+        $this->product_description = $product->description ?? '';
+        $this->product_price = $product->price ?? '';
+        $this->product_category = $product->category;
+        $this->product_is_active = $product->is_active;
+
+        $this->showProductModal = true;
+    }
+
+    // Method untuk toggle modal produk
+    public function toggleProductModal()
+    {
+        $this->showProductModal = !$this->showProductModal;
+        if (!$this->showProductModal) {
+            $this->initializeProductForm();
+            $this->editingProduct = null;
+            $this->product_image = null;
+        }
+    }
+
+    // Method untuk menyimpan produk (create/update)
+    public function saveProduct()
+    {
+        $this->validate([
+            'product_name' => 'required|string|max:255',
+            'product_description' => 'nullable|string',
+            'product_price' => 'nullable|numeric|min:0',
+            'product_category' => 'required|string',
+            'product_image' => $this->editingProduct ? 'nullable|image|max:2048' : 'nullable|image|max:2048',
+        ]);
+
+        $productData = [
+            'name' => $this->product_name,
+            'description' => $this->product_description,
+            'price' => $this->product_price ? (float) $this->product_price : null,
+            'category' => $this->product_category,
+            'is_active' => $this->product_is_active,
+            'umkm_profile_id' => $this->umkm->id,
+        ];
+
+        // Handle image upload
+        if ($this->product_image) {
+            // If editing and has existing image, delete it
+            if ($this->editingProduct && $this->editingProduct->image && Storage::exists($this->editingProduct->image)) {
+                Storage::delete($this->editingProduct->image);
+            }
+
+            $productData['image'] = $this->product_image->store('product-images', 'public');
+        }
+
+        if ($this->editingProduct) {
+            // Update existing product
+            $this->editingProduct->update($productData);
+            session()->flash('success', 'Produk berhasil diperbarui!');
+        } else {
+            // Create new product
+            $this->umkm->products()->create($productData);
+            session()->flash('success', 'Produk berhasil ditambahkan!');
+        }
+
+        $this->showProductModal = false;
+        $this->umkm->refresh();
+    }
+
+    // Method untuk menampilkan modal konfirmasi hapus produk
+    public function confirmDeleteProduct($productId)
+    {
+        $this->editingProduct = $this->umkm->products()->findOrFail($productId);
+        $this->showDeleteProductModal = true;
+    }
+
+    // Method untuk toggle modal hapus produk
+    public function toggleDeleteProductModal()
+    {
+        $this->showDeleteProductModal = !$this->showDeleteProductModal;
+        $this->editingProduct = null;
+    }
+
+    // Method untuk menghapus produk
+    public function deleteProduct()
+    {
+        if ($this->editingProduct) {
+            // Delete product image if exists
+            if ($this->editingProduct->image && Storage::exists($this->editingProduct->image)) {
+                Storage::delete($this->editingProduct->image);
+            }
+
+            $this->editingProduct->delete();
+            session()->flash('success', 'Produk berhasil dihapus!');
+
+            $this->showDeleteProductModal = false;
+            $this->editingProduct = null;
+            $this->umkm->refresh();
+        }
+    }
+
+    // Method untuk toggle status aktif produk
+    public function toggleProductStatus($productId)
+    {
+        $product = $this->umkm->products()->findOrFail($productId);
+        $product->update([
+            'is_active' => !$product->is_active,
+        ]);
+
+        $status = $product->is_active ? 'diaktifkan' : 'dinonaktifkan';
+        session()->flash('success', "Produk berhasil {$status}!");
+
+        $this->umkm->refresh();
+    }
 
     public function mount($id)
     {
@@ -162,8 +318,7 @@ new class extends Component {
             <div class="flex justify-between items-start">
                 <div>
                     <div class="flex items-center space-x-3 mb-2">
-                        <a href="{{ route('admin.umkm') }}"
-                            class="text-gray-500 hover:text-gray-700 transition-colors">
+                        <a href="{{ route('admin.umkm') }}" class="text-gray-500 hover:text-gray-700 transition-colors">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M15 19l-7-7 7-7" />
@@ -280,65 +435,117 @@ new class extends Component {
                 </div>
 
                 <!-- Products Section -->
-                @if ($umkm->products->count() > 0)
-                    <div class="bg-white rounded-xl shadow-sm border border-gray-200">
-                        <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
-                            <h3 class="text-lg font-semibold text-gray-900">
-                                Produk ({{ $umkm->products->count() }})
-                            </h3>
-                            <a href="#" class="text-blue-600 hover:text-blue-800 text-sm font-medium">
-                                Kelola Produk
-                            </a>
-                        </div>
-                        <div class="p-6">
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                @foreach ($umkm->products->take(4) as $product)
+                <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+                    <h3 class="text-lg font-semibold text-gray-900">
+                        Produk ({{ $umkm->products->count() }})
+                    </h3>
+                    <button wire:click="showAddProductModal"
+                        class="inline-flex items-center px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white text-sm font-medium rounded-lg transition-colors">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                        </svg>
+                        Tambah Produk
+                    </button>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    @foreach ($umkm->products->take(6) as $product)
+                        <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                            <div class="flex items-start space-x-3">
+                                @if ($product->image)
+                                    <img src="{{ Storage::url($product->image) }}" alt="{{ $product->name }}"
+                                        class="w-16 h-16 rounded-lg object-cover flex-shrink-0">
+                                @else
                                     <div
-                                        class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
-                                        <div class="flex items-start space-x-3">
-                                            @if ($product->image)
-                                                <img src="{{ $product->image }}" alt="{{ $product->name }}"
-                                                    class="w-16 h-16 rounded-lg object-cover flex-shrink-0">
-                                            @else
-                                                <div
-                                                    class="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                                                    <svg class="w-8 h-8 text-gray-400" fill="none"
-                                                        stroke="currentColor" viewBox="0 0 24 24">
+                                        class="w-16 h-16 bg-accent-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                                        <svg class="w-8 h-8 text-accent-600" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                                        </svg>
+                                    </div>
+                                @endif
+                                <div class="flex-1 min-w-0">
+                                    <div class="flex items-start justify-between">
+                                        <div class="flex-1">
+                                            <h4 class="font-medium text-gray-900 truncate">{{ $product->name }}</h4>
+                                            <p class="text-sm text-gray-500 mb-1">{{ $product->category_name }}</p>
+                                            @if ($product->price)
+                                                <p class="text-primary-600 font-semibold">
+                                                    Rp {{ number_format($product->price, 0, ',', '.') }}
+                                                </p>
+                                            @endif
+                                            <span
+                                                class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium mt-1
+                                   {{ $product->is_active ? 'bg-success-100 text-success-800' : 'bg-red-100 text-red-800' }}">
+                                                {{ $product->is_active ? 'Aktif' : 'Tidak Aktif' }}
+                                            </span>
+                                        </div>
+
+                                        <!-- Action Dropdown -->
+                                        <div class="relative ml-2" x-data="{ open: false }">
+                                            <button @click="open = !open"
+                                                class="text-gray-400 hover:text-gray-600 p-1">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor"
+                                                    viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
+                                                </svg>
+                                            </button>
+
+                                            <div x-show="open" @click.away="open = false" x-transition
+                                                class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-10">
+                                                <button wire:click="editProduct({{ $product->id }})"
+                                                    class="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center">
+                                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor"
+                                                        viewBox="0 0 24 24">
                                                         <path stroke-linecap="round" stroke-linejoin="round"
                                                             stroke-width="2"
-                                                            d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                                                            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                                                     </svg>
-                                                </div>
-                                            @endif
-                                            <div class="flex-1 min-w-0">
-                                                <h4 class="font-medium text-gray-900 truncate">{{ $product->name }}
-                                                </h4>
-                                                @if ($product->price)
-                                                    <p class="text-blue-600 font-semibold">
-                                                        Rp {{ number_format($product->price, 0, ',', '.') }}
-                                                    </p>
-                                                @endif
-                                                <span
-                                                    class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium mt-1
-                                                           {{ $product->is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
-                                                    {{ $product->is_active ? 'Aktif' : 'Tidak Aktif' }}
-                                                </span>
+                                                    Edit Produk
+                                                </button>
+                                                <button wire:click="toggleProductStatus({{ $product->id }})"
+                                                    class="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center">
+                                                    @if ($product->is_active)
+                                                        <svg class="w-4 h-4 mr-2" fill="none"
+                                                            stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                                stroke-width="2"
+                                                                d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L17 17" />
+                                                        </svg>
+                                                        Nonaktifkan
+                                                    @else
+                                                        <svg class="w-4 h-4 mr-2" fill="none"
+                                                            stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                                stroke-width="2"
+                                                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                                stroke-width="2"
+                                                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                                        </svg>
+                                                        Aktifkan
+                                                    @endif
+                                                </button>
+                                                <button wire:click="confirmDeleteProduct({{ $product->id }})"
+                                                    class="w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50 flex items-center">
+                                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor"
+                                                        viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            stroke-width="2"
+                                                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                    </svg>
+                                                    Hapus
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
-                                @endforeach
-                            </div>
-
-                            @if ($umkm->products->count() > 4)
-                                <div class="mt-4 text-center">
-                                    <span class="text-gray-500 text-sm">
-                                        dan {{ $umkm->products->count() - 4 }} produk lainnya
-                                    </span>
                                 </div>
-                            @endif
+                            </div>
                         </div>
-                    </div>
-                @endif
+                    @endforeach
+                </div>
             </div>
 
             <!-- Sidebar -->
@@ -683,6 +890,149 @@ new class extends Component {
         </div>
     @endif
 
+    @if ($showProductModal)
+        <div class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50"
+            wire:click="toggleProductModal">
+            <div class="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden" wire:click.stop>
+                <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+                    <h3 class="text-xl font-semibold text-gray-900">
+                        {{ $editingProduct ? 'Edit Produk' : 'Tambah Produk Baru' }}
+                    </h3>
+                    <button wire:click="toggleProductModal" class="text-gray-400 hover:text-gray-600">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+
+                <form wire:submit.prevent="saveProduct" class="p-6 overflow-y-auto max-h-[calc(90vh-120px)]">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Nama Produk -->
+                        <div class="md:col-span-2">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Nama Produk *</label>
+                            <input type="text" wire:model="product_name"
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
+                            @error('product_name')
+                                <span class="text-red-500 text-sm">{{ $message }}</span>
+                            @enderror
+                        </div>
+
+                        <!-- Kategori -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Kategori *</label>
+                            <select wire:model="product_category"
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
+                                <option value="">Pilih Kategori</option>
+                                @foreach (App\Models\Product::CATEGORIES as $key => $value)
+                                    <option value="{{ $key }}">{{ $value }}</option>
+                                @endforeach
+                            </select>
+                            @error('product_category')
+                                <span class="text-red-500 text-sm">{{ $message }}</span>
+                            @enderror
+                        </div>
+
+                        <!-- Harga -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Harga (Rp)</label>
+                            <input type="number" wire:model="product_price" min="0" step="1000"
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
+                            @error('product_price')
+                                <span class="text-red-500 text-sm">{{ $message }}</span>
+                            @enderror
+                        </div>
+
+                        <!-- Upload Gambar -->
+                        <div class="md:col-span-2">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Gambar Produk</label>
+                            <input type="file" wire:model="product_image" accept="image/*"
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
+                            @error('product_image')
+                                <span class="text-red-500 text-sm">{{ $message }}</span>
+                            @enderror
+
+                            @if ($product_image)
+                                <div class="mt-3">
+                                    <img src="{{ $product_image->temporaryUrl() }}"
+                                        class="w-24 h-24 object-cover rounded-lg">
+                                </div>
+                            @elseif($editingProduct && $editingProduct->image)
+                                <div class="mt-3">
+                                    <p class="text-sm text-gray-600 mb-2">Gambar saat ini:</p>
+                                    <img src="{{ Storage::url($editingProduct->image) }}"
+                                        class="w-24 h-24 object-cover rounded-lg">
+                                </div>
+                            @endif
+                        </div>
+
+                        <!-- Deskripsi -->
+                        <div class="md:col-span-2">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Deskripsi</label>
+                            <textarea wire:model="product_description" rows="4"
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"></textarea>
+                            @error('product_description')
+                                <span class="text-red-500 text-sm">{{ $message }}</span>
+                            @enderror
+                        </div>
+
+                        <!-- Status Aktif -->
+                        <div class="md:col-span-2">
+                            <label class="flex items-center">
+                                <input type="checkbox" wire:model="product_is_active"
+                                    class="rounded border-gray-300 text-primary-600 shadow-sm focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50">
+                                <span class="ml-2 text-sm text-gray-700">Produk Aktif</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end space-x-3 mt-6 pt-6 border-t border-gray-200">
+                        <button type="button" wire:click="toggleProductModal"
+                            class="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
+                            Batal
+                        </button>
+                        <button type="submit"
+                            class="px-6 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors">
+                            {{ $editingProduct ? 'Update Produk' : 'Tambah Produk' }}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    @endif
+
+    @if ($showDeleteProductModal && $editingProduct)
+        <div class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50"
+            wire:click="toggleDeleteProductModal">
+            <div class="bg-white rounded-2xl p-8 max-w-md w-full shadow-2xl" wire:click.stop>
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">Hapus Produk</h3>
+                    <p class="text-gray-600 mb-6">
+                        Apakah Anda yakin ingin menghapus produk <strong>{{ $editingProduct->name }}</strong>?
+                        Tindakan ini tidak dapat dibatalkan.
+                    </p>
+
+                    <div class="flex space-x-3">
+                        <button wire:click="toggleDeleteProductModal"
+                            class="flex-1 px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium">
+                            Batal
+                        </button>
+                        <button wire:click="deleteProduct"
+                            class="flex-1 px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-medium">
+                            Ya, Hapus
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
+
     <!-- Loading States -->
     <div wire:loading.flex class="fixed inset-0 bg-black/30 backdrop-blur-sm items-center justify-center z-50">
         <div class="bg-white rounded-xl p-6 shadow-2xl">
@@ -693,4 +1043,3 @@ new class extends Component {
         </div>
     </div>
 </div>
-

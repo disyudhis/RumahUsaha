@@ -44,7 +44,7 @@ new class extends Component {
 
     public function getBrandText()
     {
-        return 'RumahUsaha.id';
+        return 'BIZHOUSE.ID';
     }
 
     public function isActiveRoute($route)
