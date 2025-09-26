@@ -259,7 +259,7 @@ new class extends Component {
             @foreach ($categories as $key => $label)
                 <button wire:click="setCategory('{{ $key }}')"
                     class="px-4 sm:px-6 py-3 rounded-full text-sm sm:text-base font-medium transition-all duration-200 whitespace-nowrap {{ $category === $key ? 'bg-primary-500 text-white shadow-warm' : 'bg-white text-neutral-600 hover:bg-primary-50 hover:text-primary-600 border border-neutral-200 hover:border-primary-200' }}">
-                    {{ $label }}
+                    {{ Str::limit($label, 10, '...') }}
                 </button>
             @endforeach
         </div>
