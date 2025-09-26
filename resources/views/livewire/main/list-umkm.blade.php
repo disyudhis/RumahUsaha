@@ -122,7 +122,7 @@ new class extends Component {
      */
     public function viewAllUmkm()
     {
-        return $this->redirect(route('main.umkm'), navigate: true);
+        return $this->redirect(route('main.umkm.index'), navigate: true);
     }
 
     /**
@@ -310,17 +310,6 @@ new class extends Component {
         @if ($showPagination && method_exists($umkmProfiles, 'links'))
             <div class="mt-8">
                 {{ $umkmProfiles->links() }}
-            </div>
-        @endif
-
-        {{-- Show More Button (only show when not showAll) --}}
-        @if (!$showAll && $showViewAllButton)
-            <div class="mt-8 text-center">
-                <button wire:click='viewAllUmkm'
-                    class="inline-flex items-center px-8 py-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white font-semibold rounded-xl hover:from-orange-600 hover:to-orange-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
-                    <span class="mr-2">👥</span>
-                    Lihat Semua Profil UMKM
-                </button>
             </div>
         @endif
     @else

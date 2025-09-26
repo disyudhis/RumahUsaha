@@ -4,7 +4,7 @@ use Livewire\Volt\Volt;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'main.main')->name('home');
-Route::view('/list-umkm', 'main.list-umkm')->name('main.umkm');
+Route::view('/list-umkm', 'main.list-umkm')->name('main.umkm.index');
 Route::view('/detail-umkm/{id}', 'main.detail-umkm')->name('main.umkm.show');
 Route::view('/formulir-pendaftaran', 'main.formulir-pendaftaran')->name('formulir-pendaftaran.index');
 Route::view('/products', 'main.list-product')->name('main.products.index');
