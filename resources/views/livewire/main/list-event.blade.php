@@ -47,6 +47,7 @@ new class extends Component {
             return [
                 'id' => $event['id'] ?? $event->id,
                 'icon' => $this->getEventIcon($event['title'] ?? $event->title),
+                'slug' => $event['slug'] ?? $event['title'],
                 'type' => $this->getEventType($event['title'] ?? $event->title),
                 'title' => $this->getEventTitle($event['title'] ?? $event->title),
                 'full_title' => $event['title'] ?? $event->title,
@@ -154,8 +155,7 @@ new class extends Component {
 
     public function viewEvent($eventId)
     {
-        // Implement event detail view later
-        // return $this->redirect(route('event.show', ['id' => $eventId]), navigate: true);
+        return $this->redirect(route('main.events.show', ['slug' => $eventId]), navigate: true);
     }
 }; ?>
 
@@ -232,7 +232,7 @@ new class extends Component {
                             </div>
 
                             {{-- Action Button --}}
-                            <button wire:click="viewEvent({{ $event['id'] }})"
+                            <button wire:click="viewEvent('{{ $event['slug'] }}')"
                                 class="bg-primary-400 hover:bg-primary-300 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200 flex items-center">
                                 Detail
                             </button>

@@ -33,7 +33,7 @@ new class extends Component {
             // ['label' => 'Kelola UMKM', 'route' => 'admin.umkm.*', 'icon' => 'business'], ['label' => 'Kelola User', 'route' => 'admin.users.*', 'icon' => 'users'], ['label' => 'Kelola Produk', 'route' => 'admin.products.*', 'icon' => 'products'], ['label' => 'Laporan', 'route' => 'admin.reports.*', 'icon' => 'reports'], ['label' => 'Pengaturan', 'route' => 'admin.settings.*', 'icon' => 'settings']
 
             case User::ROLE_UMKM_OWNER:
-                return [['label' => 'Dashboard', 'route' => 'umkm.dashboard', 'icon' => 'home'], ['label' => 'Products', 'route' => 'umkm.products', 'icon' => 'products']];
+                return [['label' => 'Dashboard', 'route' => 'umkm.dashboard', 'icon' => 'home'], ['label' => 'Products', 'route' => 'umkm.products', 'icon' => 'products'], ['label' => 'Profile', 'route' => 'umkm.profile', 'icon' => 'profile']];
             //  ['label' => 'Produk', 'route' => 'umkm.products.*', 'icon' => 'products'], ['label' => 'Pesanan', 'route' => 'umkm.orders.*', 'icon' => 'orders'], ['label' => 'Laporan', 'route' => 'umkm.reports.*', 'icon' => 'reports'], ['label' => 'Profil', 'route' => 'umkm.profile.*', 'icon' => 'profile']
             default:
                 // guest/public

@@ -5,7 +5,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Dashboard Pemilik UMKM - RumahUsaha.id</title>
+    <title>Dashboard Pemilik UMKM - BIZHOUSE.ID</title>
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700&display=swap" rel="stylesheet" />
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -21,7 +21,7 @@
         <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
             <div class="text-center mb-6">
                 <h1 class="text-2xl font-semibold text-gray-900 mb-2">🏪 Selamat Datang di Dashboard UMKM!</h1>
-                <p class="text-gray-600">Daftarkan produk Anda untuk ditampilkan di halaman utama RumahUsaha.id</p>
+                <p class="text-gray-600">Daftarkan produk Anda untuk ditampilkan di halaman utama BIZHOUSE.ID</p>
             </div>
 
             {{-- Progress Steps --}}
@@ -135,7 +135,7 @@
                         </div>
                     </div>
                 </div> --}}
-            {{-- </div> --}}
+                {{-- </div> --}}
         </div>
 
         {{-- Empty State Message --}}

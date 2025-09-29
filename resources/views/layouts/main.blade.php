@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>@yield('title', 'RumahUsaha.id - Platform UMKM Perumahan')</title>
+    <title>@yield('title', 'BIZHOUSE.ID - Platform UMKM Perumahan')</title>
     <meta name="description" content="@yield('description', 'Platform digital untuk mempromosikan dan menghubungkan pelaku UMKM di lingkungan perumahan')">
 
     <link rel="preconnect" href="https://fonts.bunny.net">

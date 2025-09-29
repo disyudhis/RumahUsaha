@@ -1,8 +1,8 @@
 @extends('layouts.main')
 
-@section('title', 'Admin Dashboard - RumahUsaha.id')
+@section('title', 'Admin Dashboard - BIZHOUSE.ID')
 @section('description', 'Dashboard admin untuk mengelola platform UMKM')
 
 @section('content')
 <livewire:admin.createevent>
-@endsection
+    @endsection

@@ -9,6 +9,7 @@ Route::view('/detail-umkm/{slug}', 'main.detail-umkm')->name('main.umkm.show');
 Route::view('/formulir-pendaftaran', 'main.formulir-pendaftaran')->name('formulir-pendaftaran.index');
 Route::view('/products', 'main.list-product')->name('main.products.index');
 Route::view('/detail-product/{slug}', 'main.detail-product')->name('main.products.show');
+Route::view('/detail-event/{slug}', 'main.detail-event')->name('main.events.show');
 // Route::post('/logout')
 // Volt::route('/detail-umkm/{id}', 'main.detail-umkm')->name('business.show');
 // Route::get('detail-umkm/{id}', fn)->name('business.show');
@@ -31,6 +32,7 @@ Route::middleware(['auth', 'verified', 'role:pemilik_umkm'])->group(function () 
         ->group(function () {
             Route::view('/', 'umkm.main')->name('dashboard');
             Route::view('/products', 'umkm.product')->name('products');
+            Route::view('/profile', 'umkm.profile')->name('profile');
         });
 });
 

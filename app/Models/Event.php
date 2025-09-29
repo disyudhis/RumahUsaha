@@ -2,16 +2,23 @@
 
 namespace App\Models;
 
+use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Model;
 
 class Event extends Model
 {
-    protected $fillable = [
-        'title',
-        'description',
-        'event_date',
-        'image',
-    ];
+    use Sluggable;
+
+    public function sluggable(): array
+    {
+        return [
+            'slug' => [
+                'source' => 'title',
+            ],
+        ];
+    }
+
+    protected $fillable = ['title', 'slug', 'description', 'event_date', 'image'];
 
     protected $casts = [
         'event_date' => 'datetime',

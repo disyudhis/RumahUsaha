@@ -25,14 +25,7 @@ new class extends Component {
     // Available categories
     public function getCategories()
     {
-        return [
-            'kuliner' => '🍽️ Kuliner',
-            'fashion' => '👗 Fashion',
-            'kerajinan' => '🎨 Kerajinan',
-            'jasa' => '⚙️ Jasa',
-            'digital' => '💻 Digital',
-            'lainnya' => '📦 Lainnya',
-        ];
+       return Product::CATEGORIES;
     }
 
     // Validation rules
@@ -44,7 +37,7 @@ new class extends Component {
             'price' => 'required|numeric|min:0',
             'category' => 'required|string|in:kuliner,fashion,kerajinan,jasa,digital,lainnya',
             'image' => 'required|image|max:2048', // max 2MB
-            'whatsapp' => 'required|string|regex:/^([0-9\s\-\+\(\)]*)$/|min:10|max:15',
+            'whatsapp' => 'nullable|string|regex:/^([0-9\s\-\+\(\)]*)$/|min:10|max:15',
             'address' => 'nullable|string|max:500',
         ];
     }
@@ -162,18 +155,18 @@ new class extends Component {
             // Create product
             $product = Product::create($productData);
 
-            // Update UMKM profile contact info if provided
-            $updateData = [];
-            if ($this->whatsapp && $this->whatsapp !== $umkmProfile->whatsapp) {
-                $updateData['whatsapp'] = $this->whatsapp;
-            }
-            if ($this->address && $this->address !== $umkmProfile->address) {
-                $updateData['address'] = $this->address;
-            }
+            // // Update UMKM profile contact info if provided
+            // $updateData = [];
+            // if ($this->whatsapp && $this->whatsapp !== $umkmProfile->whatsapp) {
+            //     $updateData['whatsapp'] = $this->whatsapp;
+            // }
+            // if ($this->address && $this->address !== $umkmProfile->address) {
+            //     $updateData['address'] = $this->address;
+            // }
 
-            if (!empty($updateData)) {
-                $umkmProfile->update($updateData);
-            }
+            // if (!empty($updateData)) {
+            //     $umkmProfile->update($updateData);
+            // }
 
             // Reset form
             $this->reset();
@@ -221,7 +214,7 @@ new class extends Component {
     }
 }; ?>
 
-<div class="lg:col-span-2">
+<div class="max-w-5xl mx-auto p-4 lg:col-span-2">
     <div class="bg-white rounded-xl shadow-sm p-6">
         <h2 class="text-lg font-semibold text-gray-900 mb-6 flex items-center">
             <span class="text-xl mr-2">📦</span>
@@ -373,46 +366,6 @@ new class extends Component {
                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                 @enderror
                 <p class="mt-1 text-xs text-gray-500">{{ strlen($description) }}/2000 karakter</p>
-            </div>
-
-            {{-- Contact Information --}}
-            <div class="border-t pt-6">
-                <h3 class="text-md font-medium text-gray-900 mb-4 flex items-center">
-                    <span class="text-lg mr-2">📞</span>
-                    Informasi Kontak
-                </h3>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                        <label for="whatsapp" class="block text-sm font-medium text-gray-700 mb-2">
-                            WhatsApp <span class="text-red-500">*</span>
-                        </label>
-                        <input type="tel" id="whatsapp" wire:model.live="whatsapp" required
-                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('whatsapp') border-red-300 @enderror"
-                            placeholder="08123456789">
-                        @error('whatsapp')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-                        @if ($whatsapp)
-                            <p class="mt-1 text-xs text-green-600">Format: {{ $whatsapp }}</p>
-                        @endif
-                    </div>
-                    <div>
-                        <label for="address" class="block text-sm font-medium text-gray-700 mb-2">Alamat
-                            Lengkap</label>
-                        <input type="text" id="address" wire:model.live="address"
-                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('address') border-red-300 @enderror"
-                            placeholder="Blok/RT/Komplek">
-                        @error('address')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
-                </div>
-                <div class="mt-3 p-3 bg-blue-50 rounded-lg">
-                    <p class="text-sm text-blue-700">
-                        <strong>Info:</strong> Kontak ini akan diperbarui di profil UMKM Anda jika berbeda dari data
-                        sebelumnya.
-                    </p>
-                </div>
             </div>
 
             {{-- Submit Button --}}
