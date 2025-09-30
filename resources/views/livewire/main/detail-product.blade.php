@@ -146,32 +146,32 @@ new class extends Component {
 
                     {{-- Contact Actions --}}
                     <div class="space-y-3">
-                        <button wire:click="contactUmkm"
+                        {{-- <button wire:click="contactUmkm"
                             class="w-full bg-gradient-to-r from-primary-500 to-primary-600 text-white py-4 px-6 rounded-xl font-semibold hover:from-primary-600 hover:to-primary-700 transform hover:-translate-y-0.5 transition-all duration-200 shadow-warm">
                             <svg class="w-5 h-5 inline-block mr-2" fill="currentColor" viewBox="0 0 20 20">
                                 <path
                                     d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
                             </svg>
                             Hubungi Penjual
-                        </button>
+                        </button> --}}
 
                         <div class="flex space-x-3">
-                            <button
+                            <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $umkm->whatsapp) }}" target="_blank"
                                 class="flex-1 bg-success-500 text-white py-3 px-4 rounded-lg font-medium hover:bg-success-600 transition-colors">
                                 <svg class="w-4 h-4 inline-block mr-2" fill="currentColor" viewBox="0 0 20 20">
                                     <path
                                         d="M.5 3.75c0-1.036.84-1.875 1.875-1.875h3.75c.415 0 .79.26.933.649l1.66 4.577A1.875 1.875 0 017.5 8.75H6.25a.75.75 0 00-.75.75v1.5c0 1.65 1.35 3 3 3h3a.75.75 0 00.75-.75V12c0-.517.21-.986.553-1.325l2.447-2.447A1.875 1.875 0 0117.5 6.75v-.375C17.5 5.34 16.66 4.5 15.625 4.5H13.75c-.621 0-1.125.504-1.125 1.125v.375c0 .414-.336.75-.75.75h-1.5a.75.75 0 01-.75-.75v-.375c0-.621-.504-1.125-1.125-1.125H2.375A1.875 1.875 0 00.5 6.375v.375z" />
                                 </svg>
                                 WhatsApp
-                            </button>
-                            <button
+                            </a>
+                            {{-- <button
                                 class="flex-1 bg-neutral-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-neutral-700 transition-colors">
                                 <svg class="w-4 h-4 inline-block mr-2" fill="currentColor" viewBox="0 0 20 20">
                                     <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
                                     <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
                                 </svg>
                                 Email
-                            </button>
+                            </button> --}}
                         </div>
                     </div>
                 </div>
