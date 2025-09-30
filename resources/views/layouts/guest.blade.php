@@ -196,13 +196,26 @@
             class="w-full lg:w-1/2 flex items-center justify-center p-8 bg-gradient-to-br from-neutral-50 to-accent-50">
             <div class="w-full max-w-md">
                 <!-- Logo for mobile -->
-                <div class="lg:hidden text-center mb-8">
-                    <a href="/" wire:navigate class="inline-block">
-                        <x-application-logo class="w-16 h-16 fill-current text-primary-500 mx-auto" />
+                <div class="lg:hidden text-center mb-10">
+                    <a href="/" wire:navigate
+                        class="mx-auto w-fit flex items-center justify-center font-bold text-secondary-800 transition duration-200 hover:text-secondary-600">
+
+                        <!-- Icon Wrapper -->
+                        <div class="w-10 h-10 bg-fix-400 rounded-xl flex items-center justify-center shadow-md mr-3">
+                            <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                <path
+                                    d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
+                            </svg>
+                        </div>
+
+                        <!-- Brand Text -->
+                        <span class="text-lg tracking-wide">BIZHOUSE.ID</span>
                     </a>
-                    <h2 class="text-2xl font-bold text-neutral-900 mt-4">Portal UMKM</h2>
-                    <p class="text-neutral-600 mt-1">Kelola bisnis Anda dengan mudah</p>
+
+                    <!-- Subtext -->
+                    <p class="text-sm text-neutral-500 mt-2">Kelola bisnis Anda dengan mudah</p>
                 </div>
+
 
                 <!-- Login Card -->
                 <div class="bg-white rounded-2xl shadow-warm-xl p-8 border border-neutral-100">

@@ -57,93 +57,121 @@
                                     ['route' => 'main.products.*', 'label' => 'Produk', 'anchor' => '#list-product'],
                                     [
                                         'route' => 'news.*',
-                                        'label' => 'Berita & Kegiatan Komunitas',
+                                        'label' => 'Berita & Kegiatan',
                                         'anchor' => '#news-activities',
                                         'dropdown' => [
-                                            'berita-terkini' => [
-                                                'label' => 'Berita Terkini',
+                                            'kolaborasi-sosial' => [
+                                                'label' => 'Kolaborasi Sosial & Pemberdayaan UMKM',
+                                                'description' =>
+                                                    'Liputan kegiatan penguatan kapasitas UMKM melalui pendampingan, advokasi, dan program pemberdayaan',
                                                 'items' => [
                                                     [
-                                                        'route' => 'news.info-komunitas',
-                                                        'label' => 'Info Terbaru Komunitas',
+                                                        'route' => 'news.pendampingan-umkm',
+                                                        'label' => 'Program Pendampingan UMKM',
                                                     ],
                                                     [
-                                                        'route' => 'news.rilis-media',
-                                                        'label' => 'Rilis Media & Publikasi',
-                                                    ],
-                                                    ['route' => 'news.pengumuman', 'label' => 'Pengumuman Penting'],
-                                                ],
-                                            ],
-                                            'agenda-event' => [
-                                                'label' => 'Agenda & Event',
-                                                'items' => [
-                                                    [
-                                                        'route' => 'news.jadwal-kegiatan',
-                                                        'label' => 'Jadwal Kegiatan Mendatang',
+                                                        'route' => 'news.advokasi-kebijakan',
+                                                        'label' => 'Advokasi & Kebijakan',
                                                     ],
                                                     [
-                                                        'route' => 'news.workshop-pelatihan',
-                                                        'label' => 'Workshop & Pelatihan',
+                                                        'route' => 'news.program-pemberdayaan',
+                                                        'label' => 'Program Pemberdayaan Masyarakat',
                                                     ],
                                                     [
-                                                        'route' => 'news.bazaar-pameran',
-                                                        'label' => 'Bazaar & Pameran Produk',
-                                                    ],
-                                                    [
-                                                        'route' => 'news.gathering-networking',
-                                                        'label' => 'Gathering & Networking',
+                                                        'route' => 'news.kolaborasi-komunitas',
+                                                        'label' => 'Kolaborasi Komunitas & Perguruan Tinggi',
                                                     ],
                                                 ],
                                             ],
-                                            'liputan-kegiatan' => [
-                                                'label' => 'Liputan Kegiatan',
-                                                'items' => [
-                                                    ['route' => 'news.laporan-kegiatan', 'label' => 'Laporan Kegiatan'],
-                                                    ['route' => 'news.galeri-foto', 'label' => 'Galeri Foto'],
-                                                    ['route' => 'news.galeri-video', 'label' => 'Galeri Video'],
-                                                ],
-                                            ],
-                                            'profil-inspirasi' => [
-                                                'label' => 'Profil & Inspirasi Anggota',
-                                                'items' => [
-                                                    ['route' => 'news.kisah-sukses', 'label' => 'Kisah Sukses UMKM'],
-                                                    [
-                                                        'route' => 'news.profil-unggulan',
-                                                        'label' => 'Profil Anggota Unggulan',
-                                                    ],
-                                                    [
-                                                        'route' => 'news.tips-praktik',
-                                                        'label' => 'Tips & Praktik Terbaik',
-                                                    ],
-                                                ],
-                                            ],
-                                            'kolaborasi-kemitraan' => [
-                                                'label' => 'Kolaborasi & Kemitraan',
+                                            'riset-inovasi' => [
+                                                'label' => 'Riset & Inovasi untuk Solusi UMKM',
+                                                'description' =>
+                                                    'Publikasi hasil penelitian, uji coba, dan inovasi teknologi untuk UMKM',
                                                 'items' => [
                                                     [
-                                                        'route' => 'news.program-bersama',
-                                                        'label' => 'Program Bersama Pemerintah/Swasta',
+                                                        'route' => 'news.hasil-penelitian',
+                                                        'label' => 'Hasil Penelitian Terapan',
                                                     ],
                                                     [
-                                                        'route' => 'news.kerja-sama',
-                                                        'label' => 'Kerja Sama Komunitas Lain',
+                                                        'route' => 'news.inovasi-teknologi',
+                                                        'label' => 'Inovasi Teknologi UMKM',
                                                     ],
                                                     [
-                                                        'route' => 'news.csr-sponsor',
-                                                        'label' => 'CSR & Dukungan Sponsor',
+                                                        'route' => 'news.pilot-project',
+                                                        'label' => 'Pilot Project & Uji Coba',
+                                                    ],
+                                                    [
+                                                        'route' => 'news.publikasi-jurnal',
+                                                        'label' => 'Publikasi & Jurnal Ilmiah',
                                                     ],
                                                 ],
                                             ],
-                                            'arsip-berita' => [
-                                                'label' => 'Arsip Berita',
+                                            'pengembangan-kapasitas' => [
+                                                'label' => 'Pengembangan Kapasitas & Keterampilan',
+                                                'description' =>
+                                                    'Pelatihan, workshop, dan mentoring untuk meningkatkan keterampilan UMKM',
                                                 'items' => [
                                                     [
-                                                        'route' => 'news.kategori',
-                                                        'label' => 'Kategori (Pelatihan, Bazaar, Sosial, dll.)',
+                                                        'route' => 'news.pelatihan-workshop',
+                                                        'label' => 'Pelatihan & Workshop',
                                                     ],
                                                     [
-                                                        'route' => 'news.arsip-tahun',
-                                                        'label' => 'Berdasarkan Tahun/Bulan',
+                                                        'route' => 'news.mentoring-coaching',
+                                                        'label' => 'Mentoring & Coaching Bisnis',
+                                                    ],
+                                                    [
+                                                        'route' => 'news.literasi-digital',
+                                                        'label' => 'Literasi Digital & Teknologi',
+                                                    ],
+                                                    ['route' => 'news.seminar-webinar', 'label' => 'Seminar & Webinar'],
+                                                    ['route' => 'news.sertifikasi', 'label' => 'Program Sertifikasi'],
+                                                ],
+                                            ],
+                                            'kemitraan-strategis' => [
+                                                'label' => 'Kemitraan Strategis & Jejaring',
+                                                'description' =>
+                                                    'Kerja sama UMKM dengan berbagai stakeholder dan event kolaboratif',
+                                                'items' => [
+                                                    [
+                                                        'route' => 'news.mou-kerja-sama',
+                                                        'label' => 'MoU & Perjanjian Kerja Sama',
+                                                    ],
+                                                    [
+                                                        'route' => 'news.program-pemerintah',
+                                                        'label' => 'Program Bersama Pemerintah',
+                                                    ],
+                                                    [
+                                                        'route' => 'news.kemitraan-swasta',
+                                                        'label' => 'Kemitraan Swasta & CSR',
+                                                    ],
+                                                    [
+                                                        'route' => 'news.event-networking',
+                                                        'label' => 'Event Networking & Kolaborasi',
+                                                    ],
+                                                    [
+                                                        'route' => 'news.akses-pembiayaan',
+                                                        'label' => 'Akses Pembiayaan & Permodalan',
+                                                    ],
+                                                ],
+                                            ],
+                                            'info-kampus' => [
+                                                'label' => 'Info Kampus & Kolaborasi UMKM',
+                                                'description' =>
+                                                    'Kegiatan kampus yang terhubung dengan dunia usaha dan UMKM',
+                                                'items' => [
+                                                    ['route' => 'news.expo-kampus', 'label' => 'Expo & Pameran Kampus'],
+                                                    [
+                                                        'route' => 'news.inkubator-bisnis',
+                                                        'label' => 'Inkubator Bisnis & Startup',
+                                                    ],
+                                                    [
+                                                        'route' => 'news.studentpreneur',
+                                                        'label' => 'Program Studentpreneur',
+                                                    ],
+                                                    ['route' => 'news.kkn-magang', 'label' => 'KKN & Magang Mahasiswa'],
+                                                    [
+                                                        'route' => 'news.kompetisi-bisnis',
+                                                        'label' => 'Kompetisi & Lomba Bisnis',
                                                     ],
                                                 ],
                                             ],
@@ -176,17 +204,21 @@
 
                                         {{-- Mega Dropdown --}}
                                         <div id="dropdown-{{ $item['route'] }}"
-                                            class="absolute left-0 mt-2 w-screen max-w-4xl bg-white rounded-xl shadow-warm-lg border border-accent-100 opacity-0 invisible transform translate-y-2 transition-all duration-300 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 z-50"
+                                            class="absolute left-0 mt-2 w-screen max-w-5xl bg-white rounded-xl shadow-warm-lg border border-accent-100 opacity-0 invisible transform translate-y-2 transition-all duration-300 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 z-50"
                                             onmouseenter="showDropdown('{{ $item['route'] }}')"
                                             onmouseleave="hideDropdown('{{ $item['route'] }}')">
                                             <div class="p-6">
                                                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                                                     @foreach ($item['dropdown'] as $sectionKey => $section)
                                                         <div class="space-y-3">
-                                                            <h4
-                                                                class="font-semibold text-secondary-800 text-sm border-b border-accent-100 pb-2 mb-3">
-                                                                {{ $section['label'] }}
-                                                            </h4>
+                                                            <div class="border-b border-accent-100 pb-3 mb-3">
+                                                                <h4 class="font-semibold text-secondary-800 text-sm mb-1">
+                                                                    {{ $section['label'] }}
+                                                                </h4>
+                                                                <p class="text-xs text-secondary-500 leading-relaxed">
+                                                                    {{ $section['description'] }}
+                                                                </p>
+                                                            </div>
                                                             <div class="space-y-2">
                                                                 @foreach ($section['items'] as $subItem)
                                                                     <a href="#"
@@ -211,7 +243,8 @@
                                                 <div class="border-t border-accent-100 mt-6 pt-4">
                                                     <div class="flex items-center justify-between">
                                                         <div class="text-sm text-secondary-500">
-                                                            Temukan semua informasi terbaru tentang komunitas UMKM
+                                                            Temukan berbagai program dan kegiatan untuk mengembangkan UMKM
+                                                            Anda
                                                         </div>
                                                         <a href="#"
                                                             class="inline-flex items-center text-sm font-medium text-primary-600 hover:text-primary-700 transition-colors">
