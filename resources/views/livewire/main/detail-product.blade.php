@@ -156,7 +156,7 @@ new class extends Component {
                         </button> --}}
 
                         <div class="flex space-x-3">
-                            <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $umkm->whatsapp) }}" target="_blank"
+                            <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $product->umkmProfile->whatsapp) }}" target="_blank"
                                 class="flex-1 bg-success-500 text-white py-3 px-4 rounded-lg font-medium hover:bg-success-600 transition-colors">
                                 <svg class="w-4 h-4 inline-block mr-2" fill="currentColor" viewBox="0 0 20 20">
                                     <path
