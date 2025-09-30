@@ -26,13 +26,15 @@ Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
             // Volt::route('/events', 'admin.createevent')->name('events');
         });
 });
-Route::middleware(['auth', 'verified', 'role:pemilik_umkm'])->group(function () {
+Route::middleware(['auth', 'verified', 'role:pemilik_umkm', 'approved'])->group(function () {
     Route::prefix('umkm')
         ->name('umkm.')
         ->group(function () {
             Route::view('/', 'umkm.main')->name('dashboard');
-            Route::view('/products', 'umkm.product')->name('products');
+            Route::view('/add-product', 'umkm.product')->name('products');
             Route::view('/profile', 'umkm.profile')->name('profile');
+            Route::view('/detail-product/{slug}', 'umkm.detail-product')->name('detail-product');
+            Route::view('/products', 'umkm.list-product')->name('list-product');
         });
 });
 

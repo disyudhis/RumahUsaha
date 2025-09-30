@@ -53,10 +53,10 @@ new class extends Component {
                         </h1>
                         <p class="text-gray-600">
                             @if ($umkmProfile)
-                            Selamat datang, {{ $umkmProfile->business_name }}! Kelola produk dan bisnis Anda dengan
-                            mudah
+                                Selamat datang, {{ $umkmProfile->business_name }}! Kelola produk dan bisnis Anda dengan
+                                mudah
                             @else
-                            Lengkapi profil UMKM Anda untuk mulai berjualan
+                                Lengkapi profil UMKM Anda untuk mulai berjualan
                             @endif
                         </p>
                     </div>
@@ -75,8 +75,8 @@ new class extends Component {
         </div>
 
         @if (!$umkmProfile)
-        {{-- Profile Setup Alert --}}
-        {{-- <div class="mb-8">
+            {{-- Profile Setup Alert --}}
+            {{-- <div class="mb-8">
             <div class="bg-yellow-50 border border-yellow-200 rounded-xl p-6">
                 <div class="flex items-start">
                     <div class="text-yellow-400 text-2xl mr-4">⚠️</div>
@@ -93,20 +93,20 @@ new class extends Component {
             </div>
         </div> --}}
         @else
-        {{-- Quick Actions --}}
-        <div class="mb-8">
-            <h2 class="text-lg font-semibold text-gray-900 mb-4">Aksi Cepat</h2>
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                <a href="{{ route('umkm.products') }}"
-                    class="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
-                    <div class="text-center">
-                        <div class="text-3xl mb-2">➕</div>
-                        <h3 class="font-medium text-gray-900 mb-1">Tambah Produk</h3>
-                        <p class="text-sm text-gray-500">Daftarkan produk baru</p>
-                    </div>
-                </a>
+            {{-- Quick Actions --}}
+            <div class="mb-8">
+                <h2 class="text-lg font-semibold text-gray-900 mb-4">Aksi Cepat</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <a href="{{ route('umkm.products') }}"
+                        class="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
+                        <div class="text-center">
+                            <div class="text-3xl mb-2">➕</div>
+                            <h3 class="font-medium text-gray-900 mb-1">Tambah Produk</h3>
+                            <p class="text-sm text-gray-500">Daftarkan produk baru</p>
+                        </div>
+                    </a>
 
-                {{-- <a href="{{ route('umkm.products') }}"
+                    {{-- <a href="{{ route('umkm.products') }}"
                     class="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
                     <div class="text-center">
                         <div class="text-3xl mb-2">📦</div>
@@ -115,7 +115,7 @@ new class extends Component {
                     </div>
                 </a> --}}
 
-                {{-- <a href="{{ route('umkm.profile') }}"
+                    {{-- <a href="{{ route('umkm.profile') }}"
                     class="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
                     <div class="text-center">
                         <div class="text-3xl mb-2">⚙️</div>
@@ -124,123 +124,90 @@ new class extends Component {
                     </div>
                 </a> --}}
 
-                {{-- <a href="#" class="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
+                    {{-- <a href="#" class="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
                     <div class="text-center">
                         <div class="text-3xl mb-2">📊</div>
                         <h3 class="font-medium text-gray-900 mb-1">Statistik</h3>
                         <p class="text-sm text-gray-500">Lihat performa bisnis</p>
                     </div>
                 </a> --}}
+                </div>
             </div>
-        </div>
 
-        {{-- Main Content Grid --}}
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-            {{-- Recent Products --}}
-            <div class="bg-white rounded-xl shadow-sm p-6">
-                <div class="flex items-center justify-between mb-4">
-                    <h2 class="text-lg font-semibold text-gray-900">Produk Terbaru</h2>
-                    <a href="{{ route('umkm.products') }}" class="text-sm text-blue-600 hover:text-blue-700">Lihat
-                        Semua</a>
+            {{-- Main Content Grid --}}
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                {{-- Recent Products --}}
+                <div class="bg-white rounded-xl shadow-sm p-6">
+                    @if ($recentProducts->count() > 0)
+                        <livewire:umkm.list-product :view-mode="'compact'" :limit="1" :show-header="true"
+                            :show-filters="false" :show-pagination="false" />
+                    @else
+                        {{-- Empty State --}}
+                        <div class="text-center py-8">
+                            <div class="text-4xl mb-3">📦</div>
+                            <h3 class="font-medium text-gray-900 mb-2">Belum Ada Produk</h3>
+                            <p class="text-gray-500 text-sm mb-4">
+                                Mulai dengan menambahkan produk pertama Anda
+                            </p>
+                            <a href="{{ route('umkm.products') }}"
+                                class="inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors">
+                                <span class="mr-2">+</span>
+                                Tambah Produk
+                            </a>
+                        </div>
+                    @endif
                 </div>
 
-                @if ($recentProducts->count() > 0)
-                <div class="space-y-3">
-                    @foreach ($recentProducts as $product)
-                    <div class="flex items-center p-3 border border-gray-100 rounded-lg hover:bg-gray-50">
-                        <div class="w-12 h-12 bg-gray-200 rounded-lg mr-3 flex items-center justify-center">
-                            @if ($product->image)
-                            <img src="{{ Storage::url($product->image) }}" alt="{{ $product->name }}"
-                                class="w-full h-full object-cover rounded-lg">
-                            @else
-                            <span class="text-gray-400">📦</span>
-                            @endif
-                        </div>
-                        <div class="flex-1">
-                            <h4 class="font-medium text-gray-900 text-sm">{{ $product->name }}</h4>
-                            <div class="flex items-center space-x-2 text-xs text-gray-500">
-                                <span>{{ $product->category_name }}</span>
-                                <span>•</span>
-                                <span>Rp {{ $product->formatted_price }}</span>
+                {{-- Business Tips --}}
+                <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-6">
+                    <h2 class="text-lg font-semibold text-green-800 mb-4 flex items-center">
+                        <span class="mr-2">💡</span>
+                        Tips Bisnis
+                    </h2>
+
+                    <div class="space-y-3">
+                        <div class="flex items-start bg-white bg-opacity-50 rounded-lg p-3">
+                            <span class="text-green-600 mr-3 mt-0.5">✓</span>
+                            <div>
+                                <h4 class="font-medium text-green-800 text-sm">Foto Produk Berkualitas</h4>
+                                <p class="text-green-700 text-xs mt-1">Gunakan foto yang jelas dan menarik untuk
+                                    meningkatkan daya tarik produk</p>
                             </div>
                         </div>
-                        <div class="text-xs">
-                            @if ($product->is_active ?? true)
-                            <span class="bg-green-100 text-green-800 px-2 py-1 rounded">Aktif</span>
-                            @else
-                            <span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded">Pending</span>
-                            @endif
+
+                        <div class="flex items-start bg-white bg-opacity-50 rounded-lg p-3">
+                            <span class="text-green-600 mr-3 mt-0.5">✓</span>
+                            <div>
+                                <h4 class="font-medium text-green-800 text-sm">Deskripsi Lengkap</h4>
+                                <p class="text-green-700 text-xs mt-1">Berikan informasi detail tentang produk dan cara
+                                    pemesanan</p>
+                            </div>
                         </div>
-                    </div>
-                    @endforeach
-                </div>
-                @else
-                {{-- Empty State --}}
-                <div class="text-center py-8">
-                    <div class="text-4xl mb-3">📦</div>
-                    <h3 class="font-medium text-gray-900 mb-2">Belum Ada Produk</h3>
-                    <p class="text-gray-500 text-sm mb-4">
-                        Mulai dengan menambahkan produk pertama Anda
-                    </p>
-                    <a href="{{ route('umkm.products') }}"
-                        class="inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors">
-                        <span class="mr-2">+</span>
-                        Tambah Produk
-                    </a>
-                </div>
-                @endif
-            </div>
 
-            {{-- Business Tips --}}
-            <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-6">
-                <h2 class="text-lg font-semibold text-green-800 mb-4 flex items-center">
-                    <span class="mr-2">💡</span>
-                    Tips Bisnis
-                </h2>
-
-                <div class="space-y-3">
-                    <div class="flex items-start bg-white bg-opacity-50 rounded-lg p-3">
-                        <span class="text-green-600 mr-3 mt-0.5">✓</span>
-                        <div>
-                            <h4 class="font-medium text-green-800 text-sm">Foto Produk Berkualitas</h4>
-                            <p class="text-green-700 text-xs mt-1">Gunakan foto yang jelas dan menarik untuk
-                                meningkatkan daya tarik produk</p>
-                        </div>
-                    </div>
-
-                    <div class="flex items-start bg-white bg-opacity-50 rounded-lg p-3">
-                        <span class="text-green-600 mr-3 mt-0.5">✓</span>
-                        <div>
-                            <h4 class="font-medium text-green-800 text-sm">Deskripsi Lengkap</h4>
-                            <p class="text-green-700 text-xs mt-1">Berikan informasi detail tentang produk dan cara
-                                pemesanan</p>
-                        </div>
-                    </div>
-
-                    <div class="flex items-start bg-white bg-opacity-50 rounded-lg p-3">
-                        <span class="text-green-600 mr-3 mt-0.5">✓</span>
-                        <div>
-                            <h4 class="font-medium text-green-800 text-sm">Update Berkala</h4>
-                            <p class="text-green-700 text-xs mt-1">Perbarui status produk dan informasi secara rutin
-                            </p>
+                        <div class="flex items-start bg-white bg-opacity-50 rounded-lg p-3">
+                            <span class="text-green-600 mr-3 mt-0.5">✓</span>
+                            <div>
+                                <h4 class="font-medium text-green-800 text-sm">Update Berkala</h4>
+                                <p class="text-green-700 text-xs mt-1">Perbarui status produk dan informasi secara rutin
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        {{-- Quick Stats --}}
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
-            <div class="bg-white rounded-lg shadow-sm p-4 text-center">
-                <div class="text-2xl font-bold text-blue-600 mb-1">{{ $totalProducts }}</div>
-                <div class="text-sm text-gray-500">Total Produk</div>
-            </div>
+            {{-- Quick Stats --}}
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
+                <div class="bg-white rounded-lg shadow-sm p-4 text-center">
+                    <div class="text-2xl font-bold text-blue-600 mb-1">{{ $totalProducts }}</div>
+                    <div class="text-sm text-gray-500">Total Produk</div>
+                </div>
 
-            <div class="bg-white rounded-lg shadow-sm p-4 text-center">
-                <div class="text-2xl font-bold text-green-600 mb-1">{{ $activeProducts }}</div>
-                <div class="text-sm text-gray-500">Produk Aktif</div>
+                <div class="bg-white rounded-lg shadow-sm p-4 text-center">
+                    <div class="text-2xl font-bold text-green-600 mb-1">{{ $activeProducts }}</div>
+                    <div class="text-sm text-gray-500">Produk Aktif</div>
+                </div>
             </div>
-        </div>
         @endif
 
         {{-- Getting Started Section --}}

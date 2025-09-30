@@ -13,6 +13,7 @@
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=acme:400|aleo:500|inter:400,500,600,700&display=swap"
         rel="stylesheet" />
+    <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @stack('styles')
@@ -154,27 +155,9 @@
                                         'anchor' => '#join-community',
                                     ],
                                 ];
-
-                                $admin_nav = [
-                                    ['route' => 'admin.dashboard', 'label' => 'Dashboard', 'anchor' => null],
-                                    ['route' => 'admin.users', 'label' => 'Kelola Users', 'anchor' => null],
-                                    ['route' => 'admin.products', 'label' => 'Kelola Produk', 'anchor' => null],
-                                ];
-
-                                $umkm_owner_nav = [
-                                    ['route' => 'umkm.dashboard', 'label' => 'Dashboard UMKM', 'anchor' => null],
-                                    ['route' => 'umkm.products', 'label' => 'Produk Saya', 'anchor' => null],
-                                    ['route' => 'umkm.profile', 'label' => 'Profil Bisnis', 'anchor' => null],
-                                ];
-
-                                $navItems = match (auth()->user()->user_type ?? 'guest') {
-                                    'admin' => $admin_nav,
-                                    'pemilik_umkm' => $umkm_owner_nav,
-                                    default => $generalNav,
-                                };
                             @endphp
 
-                            @foreach ($navItems as $item)
+                            @foreach ($generalNav as $item)
                                 @if (isset($item['dropdown']))
                                     {{-- Menu dengan dropdown --}}
                                     <div class="relative group">
@@ -255,42 +238,15 @@
                             @endforeach
                         </nav>
 
-                        {{-- User Menu for Dashboard Users --}}
-                        @auth
-                            @if (in_array(auth()->user()->user_type, ['admin', 'pemilik_umkm']))
-                                <div class="relative hidden md:block">
-                                    <button type="button"
-                                        class="flex items-center text-sm font-medium text-secondary-700 hover:text-secondary-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 rounded-lg px-3 py-2"
-                                        onclick="toggleUserMenu()" aria-expanded="false" aria-haspopup="true">
-                                        <div
-                                            class="w-8 h-8 bg-primary-100 text-primary-600 rounded-full flex items-center justify-center mr-2">
-                                            <span class="text-sm font-semibold">
-                                                {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
-                                            </span>
-                                        </div>
-                                        <span class="hidden sm:inline">{{ auth()->user()->name }}</span>
-                                        <svg class="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M19 9l-7 7-7-7" />
-                                        </svg>
-                                    </button>
-
-                                    {{-- Dropdown Menu --}}
-                                    <div class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-warm-lg py-1 ring-1 ring-accent-200 ring-opacity-50"
-                                        id="user-menu">
-                                        <div class="border-t border-accent-100"></div>
-                                        <button wire:click="logout"
-                                            class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center">
-                                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                                            </svg>
-                                            Logout
-                                        </button>
-                                    </div>
-                                </div>
-                            @endif
-                        @endauth
+                        {{-- Login Button - Desktop --}}
+                        <a href="{{ route('login') }}"
+                            class="hidden md:inline-flex items-center px-5 py-2.5 bg-gradient-to-r from-primary-600 to-primary-500 text-white text-sm font-medium rounded-lg shadow-warm hover:from-primary-700 hover:to-primary-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-all duration-200 hover:shadow-warm-lg hover:scale-105">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+                            </svg>
+                            Masuk
+                        </a>
 
                         {{-- Mobile menu button --}}
                         <button type="button"
@@ -308,7 +264,7 @@
                 {{-- Mobile Navigation Menu --}}
                 <div class="md:hidden hidden" id="mobile-menu">
                     <div class="px-2 pt-2 pb-3 space-y-1 border-t border-accent-200">
-                        @foreach ($navItems as $item)
+                        @foreach ($generalNav as $item)
                             @if (isset($item['dropdown']))
                                 {{-- Mobile dropdown menu --}}
                                 <div class="space-y-1">
@@ -351,37 +307,17 @@
                             @endif
                         @endforeach
 
-                        {{-- Mobile User Menu --}}
-                        @auth
-                            @if (in_array(auth()->user()->user_type, ['admin', 'pemilik_umkm']))
-                                <div class="border-t border-accent-200 pt-4 mt-4">
-                                    <div class="px-3 py-2">
-                                        <div class="flex items-center mb-3">
-                                            <div
-                                                class="w-8 h-8 bg-primary-100 text-primary-600 rounded-full flex items-center justify-center mr-3">
-                                                <span class="text-sm font-semibold">
-                                                    {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
-                                                </span>
-                                            </div>
-                                            <div>
-                                                <div class="text-base font-medium text-secondary-800">
-                                                    {{ auth()->user()->name }}</div>
-                                                <div class="text-sm text-secondary-500">
-                                                    {{ ucfirst(str_replace('_', ' ', auth()->user()->user_type)) }}</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <button wire:click="logout"
-                                        class="w-full text-left px-3 py-2 text-base text-red-600 hover:bg-red-50 flex items-center rounded-lg">
-                                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                                        </svg>
-                                        Logout
-                                    </button>
-                                </div>
-                            @endif
-                        @endauth
+                        {{-- Login Button - Mobile --}}
+                        <div class="pt-4 border-t border-accent-200 mt-4">
+                            <a href="{{ route('login') }}"
+                                class="flex items-center justify-center w-full px-4 py-3 bg-gradient-to-r from-primary-600 to-primary-500 text-white text-base font-medium rounded-lg shadow-warm hover:from-primary-700 hover:to-primary-600 transition-all duration-200">
+                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+                                </svg>
+                                Masuk
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>

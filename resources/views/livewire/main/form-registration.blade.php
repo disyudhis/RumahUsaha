@@ -78,9 +78,6 @@ new class extends Component {
         $this->isSubmitting = true;
 
         try {
-            // Reset errors sebelum validasi
-            $this->resetErrorBag();
-
             $validatedData = $this->validate();
 
             DB::transaction(function () use ($validatedData) {
@@ -113,21 +110,15 @@ new class extends Component {
                 ]);
             });
 
-            session()->flash('success', 'Pendaftaran berhasil! Akun Anda sedang menunggu persetujuan dari admin. Kami akan mengirimkan notifikasi melalui email setelah akun disetujui.');
+            session()->flash('success', 'Pendaftaran berhasil! Akun Anda sedang menunggu persetujuan dari admin.');
             $this->resetForm();
-
-            // Dispatch event untuk menampilkan modal konfirmasi
             $this->dispatch('showRegistrationSuccess');
         } catch (\Illuminate\Validation\ValidationException $e) {
-            // Tangkap validation exception khusus
-            \Log::error('Validation Error: ', $e->errors());
-
-            // Scroll ke error pertama
-            $this->dispatch('scrollToError');
+            $this->isSubmitting = false;
+            throw $e;
         } catch (\Exception $e) {
             \Log::error('UMKM Registration Error: ' . $e->getMessage());
             session()->flash('error', 'Terjadi kesalahan saat mendaftarkan akun. Silakan coba lagi.');
-        } finally {
             $this->isSubmitting = false;
         }
     }
@@ -143,37 +134,59 @@ new class extends Component {
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
             {{-- Success/Error Messages --}}
             @if (session()->has('success'))
-            <div class="mb-6 bg-green-50 border border-green-200 rounded-lg p-4">
-                <div class="flex">
-                    <div class="flex-shrink-0">
-                        <svg class="h-5 w-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd"
-                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                                clip-rule="evenodd" />
-                        </svg>
-                    </div>
-                    <div class="ml-3">
-                        <p class="text-sm text-green-800">{{ session('success') }}</p>
+                <div class="mb-6 bg-green-50 border border-green-200 rounded-lg p-4">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <svg class="h-5 w-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-sm text-green-800">{{ session('success') }}</p>
+                        </div>
                     </div>
                 </div>
-            </div>
+            @endif
+
+            @if ($errors->any())
+                <div class="mb-6 bg-red-50 border border-red-200 rounded-lg p-4">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <svg class="h-5 w-5 text-red-400" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                        <div class="ml-3">
+                            <h3 class="text-sm font-medium text-red-800">Terdapat kesalahan pada form:</h3>
+                            <ul class="mt-2 text-sm text-red-700 list-disc list-inside">
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    </div>
+                </div>
             @endif
 
             @if (session()->has('error'))
-            <div class="mb-6 bg-red-50 border border-red-200 rounded-lg p-4">
-                <div class="flex">
-                    <div class="flex-shrink-0">
-                        <svg class="h-5 w-5 text-red-400" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd"
-                                d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                                clip-rule="evenodd" />
-                        </svg>
-                    </div>
-                    <div class="ml-3">
-                        <p class="text-sm text-red-800">{{ session('error') }}</p>
+                <div class="mb-6 bg-red-50 border border-red-200 rounded-lg p-4">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <svg class="h-5 w-5 text-red-400" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-sm text-red-800">{{ session('error') }}</p>
+                        </div>
                     </div>
                 </div>
-            </div>
             @endif
 
             {{-- Header Section --}}
@@ -197,16 +210,16 @@ new class extends Component {
                     <div class="flex items-center justify-between">
                         <h2 class="text-white font-semibold">Form Pendaftaran</h2>
                         @if ($isSubmitting)
-                        <div class="flex items-center text-white text-sm">
-                            <svg class="animate-spin -ml-1 mr-2 h-4 w-4" fill="none" viewBox="0 0 24 24">
-                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
-                                    stroke-width="4"></circle>
-                                <path class="opacity-75" fill="currentColor"
-                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-                                </path>
-                            </svg>
-                            Memproses...
-                        </div>
+                            <div class="flex items-center text-white text-sm">
+                                <svg class="animate-spin -ml-1 mr-2 h-4 w-4" fill="none" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10"
+                                        stroke="currentColor" stroke-width="4"></circle>
+                                    <path class="opacity-75" fill="currentColor"
+                                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                                    </path>
+                                </svg>
+                                Memproses...
+                            </div>
                         @endif
                     </div>
                 </div>
@@ -264,7 +277,7 @@ new class extends Component {
                                     class="w-full px-4 py-3 border border-accent-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors @error('name') border-red-300 @enderror"
                                     placeholder="Masukkan nama lengkap Anda">
                                 @error('name')
-                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
                             </div>
 
@@ -277,7 +290,7 @@ new class extends Component {
                                     class="w-full px-4 py-3 border border-accent-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors @error('email') border-red-300 @enderror"
                                     placeholder="nama@email.com">
                                 @error('email')
-                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
                             </div>
 
@@ -292,7 +305,8 @@ new class extends Component {
                                         placeholder="Minimal 8 karakter">
                                     <button type="button" onclick="togglePassword('password')"
                                         class="absolute right-3 top-1/2 -translate-y-1/2 text-secondary-400 hover:text-secondary-600">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                 d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -303,30 +317,30 @@ new class extends Component {
 
                                 {{-- Password strength indicator --}}
                                 @if (!empty($password))
-                                <div class="mt-2 space-y-1">
-                                    <div class="flex items-center text-xs">
-                                        <span
-                                            class="@if (strlen($password) >= 8) text-green-600 @else text-red-600 @endif">
-                                            ✓ Minimal 8 karakter
-                                        </span>
+                                    <div class="mt-2 space-y-1">
+                                        <div class="flex items-center text-xs">
+                                            <span
+                                                class="@if (strlen($password) >= 8) text-green-600 @else text-red-600 @endif">
+                                                ✓ Minimal 8 karakter
+                                            </span>
+                                        </div>
+                                        <div class="flex items-center text-xs">
+                                            <span
+                                                class="@if (preg_match('/[a-z]/', $password) && preg_match('/[A-Z]/', $password)) text-green-600 @else text-red-600 @endif">
+                                                ✓ Huruf besar dan kecil
+                                            </span>
+                                        </div>
+                                        <div class="flex items-center text-xs">
+                                            <span
+                                                class="@if (preg_match('/[0-9]/', $password)) text-green-600 @else text-red-600 @endif">
+                                                ✓ Mengandung angka
+                                            </span>
+                                        </div>
                                     </div>
-                                    <div class="flex items-center text-xs">
-                                        <span
-                                            class="@if (preg_match('/[a-z]/', $password) && preg_match('/[A-Z]/', $password)) text-green-600 @else text-red-600 @endif">
-                                            ✓ Huruf besar dan kecil
-                                        </span>
-                                    </div>
-                                    <div class="flex items-center text-xs">
-                                        <span
-                                            class="@if (preg_match('/[0-9]/', $password)) text-green-600 @else text-red-600 @endif">
-                                            ✓ Mengandung angka
-                                        </span>
-                                    </div>
-                                </div>
                                 @endif
 
                                 @error('password')
-                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
                             </div>
 
@@ -343,7 +357,8 @@ new class extends Component {
                                         placeholder="Ulangi password">
                                     <button type="button" onclick="togglePassword('password_confirmation')"
                                         class="absolute right-3 top-1/2 -translate-y-1/2 text-secondary-400 hover:text-secondary-600">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                 d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -382,7 +397,7 @@ new class extends Component {
                                     class="w-full px-4 py-3 border border-accent-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors @error('business_name') border-red-300 @enderror"
                                     placeholder="Contoh: Warung Makan Ibu Sari">
                                 @error('business_name')
-                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
                             </div>
 
@@ -393,21 +408,21 @@ new class extends Component {
                                 </label>
 
                                 @if ($this->canAutoFillOwner())
-                                <div class="mb-2 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-                                    <p class="text-sm text-blue-700 mb-2">Apakah nama pemilik sama dengan nama
-                                        akun?</p>
-                                    <button type="button" wire:click="$set('owner_name', '{{ $name }}')"
-                                        class="text-xs bg-blue-100 text-blue-700 px-3 py-1 rounded-full hover:bg-blue-200">
-                                        Gunakan "{{ $name }}"
-                                    </button>
-                                </div>
+                                    <div class="mb-2 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                                        <p class="text-sm text-blue-700 mb-2">Apakah nama pemilik sama dengan nama
+                                            akun?</p>
+                                        <button type="button" wire:click="$set('owner_name', '{{ $name }}')"
+                                            class="text-xs bg-blue-100 text-blue-700 px-3 py-1 rounded-full hover:bg-blue-200">
+                                            Gunakan "{{ $name }}"
+                                        </button>
+                                    </div>
                                 @endif
 
                                 <input type="text" id="owner_name" wire:model.blur="owner_name" required disabled
                                     class="w-full px-4 py-3 border bg-gray-50 border-accent-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors @error('owner_name') border-red-300 @enderror"
                                     placeholder="Nama pemilik usaha">
                                 @error('owner_name')
-                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
                             </div>
 
@@ -420,7 +435,7 @@ new class extends Component {
                                     class="w-full px-4 py-3 border border-accent-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors @error('address') border-red-300 @enderror"
                                     placeholder="Alamat lengkap usaha Anda (termasuk RT/RW, kelurahan, kecamatan)"></textarea>
                                 @error('address')
-                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
                             </div>
 
@@ -434,7 +449,7 @@ new class extends Component {
                                         class="w-full px-4 py-3 border border-accent-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors @error('kecamatan') border-red-300 @enderror"
                                         placeholder="Contoh: Kecamatan Sukajadi">
                                     @error('kecamatan')
-                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                     @enderror
                                 </div>
 
@@ -447,11 +462,11 @@ new class extends Component {
                                         class="w-full px-4 py-3 border border-accent-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors @error('category') border-red-300 @enderror">
                                         <option value="">Pilih kategori usaha</option>
                                         @foreach ($this->getCategories() as $key => $value)
-                                        <option value="{{ $key }}">{{ $value }}</option>
+                                            <option value="{{ $key }}">{{ $value }}</option>
                                         @endforeach
                                     </select>
                                     @error('category')
-                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                     @enderror
                                 </div>
                             </div>
@@ -475,7 +490,7 @@ new class extends Component {
                                         Format: 8123456789 (tanpa +62 atau 0 di depan)
                                     </p>
                                     @error('whatsapp')
-                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                     @enderror
                                 </div>
 
@@ -496,7 +511,7 @@ new class extends Component {
                                         Username Instagram tanpa tanda @
                                     </p>
                                     @error('instagram')
-                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                     @enderror
                                 </div>
                             </div>
@@ -521,12 +536,12 @@ new class extends Component {
                                     </div>
                                 </div>
                                 @error('description')
-                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
                             </div>
 
                             {{-- Logo Upload --}}
-                            <div wire:ignore>
+                            <div>
                                 <label for="logo" class="block text-sm font-medium text-secondary-700 mb-2">
                                     Logo Usaha (Opsional)
                                 </label>
@@ -535,14 +550,15 @@ new class extends Component {
                                         <div id="logoPreview"
                                             class="w-20 h-20 bg-accent-100 border-2 border-dashed border-accent-300 rounded-lg flex items-center justify-center overflow-hidden">
                                             @if ($logo)
-                                            <img src="{{ $logo->temporaryUrl() }}" alt="Logo Preview"
-                                                class="w-full h-full object-cover rounded-lg">
+                                                <img src="{{ $logo->temporaryUrl() }}" alt="Logo Preview"
+                                                    class="w-full h-full object-cover rounded-lg">
                                             @else
-                                            <svg class="w-8 h-8 text-accent-400" fill="none" stroke="currentColor"
-                                                viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                            </svg>
+                                                <svg class="w-8 h-8 text-accent-400" fill="none"
+                                                    stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                                </svg>
                                             @endif
                                         </div>
                                     </div>
@@ -553,17 +569,17 @@ new class extends Component {
                                             JPG, PNG, atau GIF. Maksimal 2MB. Rasio persegi (1:1) disarankan.
                                         </p>
                                         @if ($logo)
-                                        <div class="mt-2">
-                                            <button type="button" wire:click="$set('logo', null)"
-                                                class="text-xs text-red-600 hover:text-red-800">
-                                                Hapus logo
-                                            </button>
-                                        </div>
+                                            <div class="mt-2">
+                                                <button type="button" wire:click="$set('logo', null)"
+                                                    class="text-xs text-red-600 hover:text-red-800">
+                                                    Hapus logo
+                                                </button>
+                                            </div>
                                         @endif
                                     </div>
                                 </div>
                                 @error('logo')
-                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
                             </div>
                         </div>
@@ -594,7 +610,8 @@ new class extends Component {
                             <button type="submit" wire:loading.attr="disabled" wire:target="submit"
                                 class="flex-1 bg-fix-400 text-white px-8 py-4 rounded-lg font-semibold hover:bg-fix-500 focus:ring-4 focus:ring-primary-200 transition-all duration-200 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed">
                                 <div wire:loading.remove wire:target="submit" class="flex items-center">
-                                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M5 13l4 4L19 7" />
                                     </svg>
@@ -602,8 +619,8 @@ new class extends Component {
                                 </div>
                                 <div wire:loading wire:target="submit" class="flex items-center">
                                     <svg class="animate-spin -ml-1 mr-2 h-5 w-5" fill="none" viewBox="0 0 24 24">
-                                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
-                                            stroke-width="4"></circle>
+                                        <circle class="opacity-25" cx="12" cy="12" r="10"
+                                            stroke="currentColor" stroke-width="4"></circle>
                                         <path class="opacity-75" fill="currentColor"
                                             d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
                                         </path>
@@ -644,8 +661,10 @@ new class extends Component {
                 class="fixed inset-0 bg-black bg-opacity-50 items-center justify-center z-50">
                 <div class="bg-white rounded-lg p-6 max-w-sm mx-4">
                     <div class="flex items-center">
-                        <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-primary-600" fill="none" viewBox="0 0 24 24">
-                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4">
+                        <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-primary-600" fill="none"
+                            viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                stroke-width="4">
                             </circle>
                             <path class="opacity-75" fill="currentColor"
                                 d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
@@ -662,7 +681,8 @@ new class extends Component {
             <div class="bg-white rounded-lg p-8 max-w-md mx-4 text-center">
                 <div class="mb-4">
                     <div class="w-16 h-16 bg-green-100 rounded-full mx-auto flex items-center justify-center mb-4">
-                        <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7">
                             </path>
                         </svg>
@@ -701,8 +721,8 @@ new class extends Component {
 
     {{-- JavaScript for UI enhancements --}}
     @push('scripts')
-    <script>
-        // Password visibility toggle
+        <script>
+            // Password visibility toggle
             function togglePassword(fieldId) {
                 const field = document.getElementById(fieldId);
                 const type = field.getAttribute('type') === 'password' ? 'text' : 'password';
@@ -738,16 +758,21 @@ new class extends Component {
             });
 
             // Scroll to first error on validation failure
+            // Scroll to first error on validation failure
             document.addEventListener('livewire:init', () => {
                 Livewire.on('scrollToError', () => {
                     setTimeout(() => {
-                        const firstError = document.querySelector('.border-red-300');
+                        const firstError = document.querySelector('.border-red-300, .text-red-600');
                         if (firstError) {
                             firstError.scrollIntoView({
                                 behavior: 'smooth',
                                 block: 'center'
                             });
-                            firstError.focus();
+                            // Fokus ke input field yang error
+                            const errorInput = firstError.closest('.border-red-300');
+                            if (errorInput) {
+                                errorInput.focus();
+                            }
                         }
                     }, 100);
                 });
@@ -771,6 +796,6 @@ new class extends Component {
                     closeSuccessModal();
                 }
             });
-    </script>
+        </script>
     @endpush
 </div>

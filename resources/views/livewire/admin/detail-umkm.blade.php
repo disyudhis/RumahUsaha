@@ -1,9 +1,9 @@
 <?php
 
-use Livewire\Volt\Component;
 use App\Models\UmkmProfile;
-use Livewire\Attributes\Validate;
+use Livewire\Volt\Component;
 use Livewire\WithFileUploads;
+use Livewire\Attributes\Validate;
 
 new class extends Component {
     use WithFileUploads;
@@ -235,11 +235,11 @@ new class extends Component {
 
     public function approveUmkm()
     {
+        $this->umkm->user->update(['is_approved' => true]);
         $this->umkm->update([
             'is_approved' => true,
             'is_active' => true,
         ]);
-
         session()->flash('success', 'UMKM berhasil disetujui dan diaktifkan!');
         $this->showApprovalModal = false;
         $this->umkm->refresh();
@@ -283,6 +283,7 @@ new class extends Component {
         }
 
         $this->umkm->update($updateData);
+        $this->umkm->user->update(['is_approved' => true]);
 
         session()->flash('success', 'Data UMKM berhasil diperbarui!');
         $this->showEditModal = false;

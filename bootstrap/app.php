@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\CheckApprovedUmkmMiddleware;
 use Illuminate\Foundation\Application;
 use App\Http\Middleware\UmkmMiddleware;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -14,6 +15,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
             'role' => UmkmMiddleware::class,
+            'approved' => CheckApprovedUmkmMiddleware::class
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
