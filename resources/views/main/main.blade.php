@@ -40,11 +40,8 @@
                 {{-- Section Header --}}
                 <div class="text-center mb-10">
                     <h2 class="text-3xl md:text-4xl font-bold text-neutral-800 mb-3 font-aleo">
-                        Sponsor Kami
+                        Support By
                     </h2>
-                    <p class="text-neutral-600 text-base md:text-lg max-w-2xl mx-auto">
-                        Bersama membangun ekosistem UMKM yang lebih kuat dan berkelanjutan
-                    </p>
                     <div class="mt-4 w-24 h-1 bg-gradient-to-r from-primary-400 to-primary-600 mx-auto rounded-full"></div>
                 </div>
 
@@ -57,10 +54,11 @@
                             <div class="flex-shrink-0">
                                 <div
                                     class="w-full h-full md:w-1/2 md:h-1/2 flex items-center justify-center p-6 shadow-inner">
-                                    {{-- Replace this placeholder with actual logo --}}
-                                    <img src="{{ asset('assets/sponsor-unisma.jpeg') }}" alt="Partner Name"
-                                        class="max-w-full max-h-full object-contain items-center">
-
+                                    <a href="https://lppm.unisma.ac.id/#">
+                                        {{-- Replace this placeholder with actual logo --}}
+                                        <img src="{{ asset('assets/sponsor-unisma.jpeg') }}" alt="Partner Name"
+                                            class="max-w-full max-h-full object-contain items-center">
+                                    </a>
                                 </div>
                             </div>
                         </div>
