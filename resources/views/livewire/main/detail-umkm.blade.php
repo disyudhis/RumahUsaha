@@ -37,6 +37,11 @@ new class extends Component {
     {
         return $this->redirect('/', navigate: true);
     }
+
+    public function viewProduct($productId)
+    {
+        return $this->redirect(route('main.products.show', ['slug' => $productId]), navigate: true);
+    }
 }; ?>
 
 <div class="min-h-screen bg-gradient-to-br from-primary-50 via-accent-50 to-primary-100">
@@ -96,6 +101,41 @@ new class extends Component {
 
                         <!-- Contact Info -->
                         <div class="grid grid-cols-1 gap-4">
+                            <!-- Asal Komunitas -->
+                            @if ($umkm->asal_komunitas)
+                                <div class="flex items-start space-x-4">
+                                    <div
+                                        class="w-10 h-10 bg-accent-100 rounded-full flex items-center justify-center flex-shrink-0">
+                                        <svg class="w-5 h-5 text-accent-600" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-medium text-neutral-600">Asal Komunitas:</p>
+                                        <p class="text-neutral-900 font-medium">{{ $umkm->asal_komunitas }}</p>
+                                    </div>
+                                </div>
+                            @endif
+
+                            <!-- Kecamatan -->
+                            @if ($umkm->kecamatan)
+                                <div class="flex items-start space-x-4">
+                                    <div
+                                        class="w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center flex-shrink-0">
+                                        <svg class="w-5 h-5 text-primary-600" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-medium text-neutral-600">Kecamatan:</p>
+                                        <p class="text-neutral-900 font-medium">{{ $umkm->kecamatan }}</p>
+                                    </div>
+                                </div>
+                            @endif
                             <!-- Location -->
                             <div class="flex items-start space-x-4">
                                 <div
@@ -177,13 +217,14 @@ new class extends Component {
 
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                             @foreach ($umkm->products as $product)
-                                <div
-                                    class="group bg-white rounded-xl border border-primary-200/50 overflow-hidden hover:shadow-warm-lg transition-all duration-300 hover:-translate-y-1">
+                                <div wire:click="viewProduct('{{ $product->slug }}')"
+                                    class="group bg-white rounded-xl border border-primary-200/50 overflow-hidden hover:shadow-warm-lg transition-all duration-300 hover:-translate-y-1 cursor-pointer">
                                     <!-- Product Image -->
                                     <div
                                         class="aspect-square bg-gradient-to-br from-accent-100 to-primary-200 relative overflow-hidden">
                                         @if ($product->image)
-                                            <img src="{{ Storage::url($product->image) }}" alt="{{ $product->name }}"
+                                            <img src="{{ Storage::url($product->image) }}"
+                                                alt="{{ $product->name }}"
                                                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
                                         @else
                                             <div class="flex items-center justify-center h-full">
@@ -269,7 +310,7 @@ new class extends Component {
                             <span class="font-bold text-primary-600 text-lg">{{ $umkm->products->count() }}</span>
                         </div>
 
-                        <div class="flex items-center justify-between p-3 bg-accent-50 rounded-lg">
+                        {{-- <div class="flex items-center justify-between p-3 bg-accent-50 rounded-lg">
                             <div class="flex items-center">
                                 <div class="w-8 h-8 bg-yellow-500 rounded-lg flex items-center justify-center mr-3">
                                     <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor"
@@ -281,7 +322,7 @@ new class extends Component {
                                 <span class="text-neutral-700 font-medium">Testimoni</span>
                             </div>
                             <span class="font-bold text-yellow-600 text-lg">{{ $testimonials->count() }}</span>
-                        </div>
+                        </div> --}}
 
                         <div class="flex items-center justify-between p-3 bg-neutral-50 rounded-lg">
                             <div class="flex items-center">

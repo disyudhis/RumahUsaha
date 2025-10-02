@@ -31,7 +31,7 @@ class UmkmProfile extends Model
         'edukasi' => 'Edukasi dan Pelatihan',
         'lainnya' => 'Lainnya',
     ];
-    protected $fillable = ['user_id', 'slug', 'categories', 'kecamatan', 'business_name', 'owner_name', 'address', 'whatsapp', 'instagram', 'description', 'link_website', 'logo', 'is_active', 'is_approved'];
+    protected $fillable = ['user_id', 'slug', 'categories', 'kecamatan', 'business_name', 'owner_name', 'address', 'whatsapp', 'asal_komunitas', 'instagram', 'description', 'link_website', 'logo', 'is_active', 'is_approved'];
 
     protected $casts = [
         'is_active' => 'boolean',

@@ -67,11 +67,13 @@ new class extends Component {
             <div class="lg:col-span-2 space-y-6">
 
                 <!-- Event Image Card -->
-                <div class="bg-white rounded-2xl shadow-warm-lg overflow-hidden">
+                <div x-data="{ open: false }" class="bg-white rounded-2xl shadow-warm-lg overflow-hidden">
                     <div class="relative h-96 bg-gradient-to-br from-primary-100 to-accent-100">
                         @if ($event->image)
+                            <!-- Event Image -->
                             <img src="{{ Storage::url($event->image) }}" alt="{{ $event->title }}"
-                                class="w-full h-full object-cover">
+                                class="w-full h-full object-cover cursor-zoom-in transition-transform duration-500 hover:scale-105"
+                                @click="open = true">
                         @else
                             <div class="flex items-center justify-center h-full">
                                 <div class="text-center">
@@ -98,7 +100,17 @@ new class extends Component {
                             </div>
                         </div>
                     </div>
+
+                    <!-- Modal Zoom -->
+                    <div x-show="open" x-transition
+                        class="fixed inset-0 bg-black/80 flex items-center justify-center z-50"
+                        @click.self="open = false">
+                        <img src="{{ Storage::url($event->image) }}" alt="{{ $event->title }}"
+                            class="max-h-[90vh] max-w-[90vw] rounded-lg shadow-2xl">
+                    </div>
                 </div>
+
+
 
                 <!-- Event Info Card -->
                 <div class="bg-white rounded-2xl shadow-warm-lg p-8">

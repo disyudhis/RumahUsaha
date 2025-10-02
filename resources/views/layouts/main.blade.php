@@ -7,8 +7,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>@yield('title', 'BIZHOUSE.ID - Platform UMKM Perumahan')</title>
-    <meta name="description" content="@yield('description', 'Platform digital untuk mempromosikan dan menghubungkan pelaku UMKM di lingkungan perumahan')">
+    <title>@yield('title', 'BIZHOUSE.ID - Platform UMKM')</title>
+    <meta name="description" content="@yield(
+        'description',
+        '
+                                    Menghubungkan pelaku UMKM dengan jejaring ekonomi sosial yg lebih luas'
+    )">
 
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=acme:400|aleo:500|inter:400,500,600,700&display=swap"
@@ -52,135 +56,39 @@
                         <nav class="hidden md:flex space-x-1" aria-label="Main navigation">
                             @php
                                 $generalNav = [
-                                    ['route' => 'home', 'label' => 'Home', 'anchor' => null],
-                                    ['route' => 'main.umkm.*', 'label' => 'Profil Usaha', 'anchor' => '#list-umkm'],
-                                    ['route' => 'main.products.*', 'label' => 'Produk', 'anchor' => '#list-product'],
+                                    ['route' => 'home', 'label' => 'Home'],
+                                    ['route' => 'main.umkm.index', 'label' => 'Profil Usaha'],
+                                    ['route' => 'main.products.index', 'label' => 'Produk'],
                                     [
-                                        'route' => 'news.*',
+                                        'route' => 'events.index',
                                         'label' => 'Berita & Kegiatan',
-                                        'anchor' => '#news-activities',
+                                        'mainRoute' => 'events.index',
                                         'dropdown' => [
-                                            'kolaborasi-sosial' => [
+                                            [
+                                                'category' => 'kolaborasi-sosial',
                                                 'label' => 'Kolaborasi Sosial & Pemberdayaan UMKM',
-                                                'description' =>
-                                                    'Liputan kegiatan penguatan kapasitas UMKM melalui pendampingan, advokasi, dan program pemberdayaan',
-                                                'items' => [
-                                                    [
-                                                        'route' => 'news.pendampingan-umkm',
-                                                        'label' => 'Program Pendampingan UMKM',
-                                                    ],
-                                                    [
-                                                        'route' => 'news.advokasi-kebijakan',
-                                                        'label' => 'Advokasi & Kebijakan',
-                                                    ],
-                                                    [
-                                                        'route' => 'news.program-pemberdayaan',
-                                                        'label' => 'Program Pemberdayaan Masyarakat',
-                                                    ],
-                                                    [
-                                                        'route' => 'news.kolaborasi-komunitas',
-                                                        'label' => 'Kolaborasi Komunitas & Perguruan Tinggi',
-                                                    ],
-                                                ],
                                             ],
-                                            'riset-inovasi' => [
+                                            [
+                                                'category' => 'riset-inovasi',
                                                 'label' => 'Riset & Inovasi untuk Solusi UMKM',
-                                                'description' =>
-                                                    'Publikasi hasil penelitian, uji coba, dan inovasi teknologi untuk UMKM',
-                                                'items' => [
-                                                    [
-                                                        'route' => 'news.hasil-penelitian',
-                                                        'label' => 'Hasil Penelitian Terapan',
-                                                    ],
-                                                    [
-                                                        'route' => 'news.inovasi-teknologi',
-                                                        'label' => 'Inovasi Teknologi UMKM',
-                                                    ],
-                                                    [
-                                                        'route' => 'news.pilot-project',
-                                                        'label' => 'Pilot Project & Uji Coba',
-                                                    ],
-                                                    [
-                                                        'route' => 'news.publikasi-jurnal',
-                                                        'label' => 'Publikasi & Jurnal Ilmiah',
-                                                    ],
-                                                ],
                                             ],
-                                            'pengembangan-kapasitas' => [
-                                                'label' => 'Pengembangan Kapasitas & Keterampilan',
-                                                'description' =>
-                                                    'Pelatihan, workshop, dan mentoring untuk meningkatkan keterampilan UMKM',
-                                                'items' => [
-                                                    [
-                                                        'route' => 'news.pelatihan-workshop',
-                                                        'label' => 'Pelatihan & Workshop',
-                                                    ],
-                                                    [
-                                                        'route' => 'news.mentoring-coaching',
-                                                        'label' => 'Mentoring & Coaching Bisnis',
-                                                    ],
-                                                    [
-                                                        'route' => 'news.literasi-digital',
-                                                        'label' => 'Literasi Digital & Teknologi',
-                                                    ],
-                                                    ['route' => 'news.seminar-webinar', 'label' => 'Seminar & Webinar'],
-                                                    ['route' => 'news.sertifikasi', 'label' => 'Program Sertifikasi'],
-                                                ],
+                                            [
+                                                'category' => 'pengembangan-kapasitas',
+                                                'label' => 'Pengembangan Kapasitas & Keterampilan UMKM',
                                             ],
-                                            'kemitraan-strategis' => [
-                                                'label' => 'Kemitraan Strategis & Jejaring',
-                                                'description' =>
-                                                    'Kerja sama UMKM dengan berbagai stakeholder dan event kolaboratif',
-                                                'items' => [
-                                                    [
-                                                        'route' => 'news.mou-kerja-sama',
-                                                        'label' => 'MoU & Perjanjian Kerja Sama',
-                                                    ],
-                                                    [
-                                                        'route' => 'news.program-pemerintah',
-                                                        'label' => 'Program Bersama Pemerintah',
-                                                    ],
-                                                    [
-                                                        'route' => 'news.kemitraan-swasta',
-                                                        'label' => 'Kemitraan Swasta & CSR',
-                                                    ],
-                                                    [
-                                                        'route' => 'news.event-networking',
-                                                        'label' => 'Event Networking & Kolaborasi',
-                                                    ],
-                                                    [
-                                                        'route' => 'news.akses-pembiayaan',
-                                                        'label' => 'Akses Pembiayaan & Permodalan',
-                                                    ],
-                                                ],
+                                            [
+                                                'category' => 'kemitraan-strategis',
+                                                'label' => 'Kemitraan Strategis & Jejaring Kolaborasi',
                                             ],
-                                            'info-kampus' => [
+                                            [
+                                                'category' => 'info-kampus',
                                                 'label' => 'Info Kampus & Kolaborasi UMKM',
-                                                'description' =>
-                                                    'Kegiatan kampus yang terhubung dengan dunia usaha dan UMKM',
-                                                'items' => [
-                                                    ['route' => 'news.expo-kampus', 'label' => 'Expo & Pameran Kampus'],
-                                                    [
-                                                        'route' => 'news.inkubator-bisnis',
-                                                        'label' => 'Inkubator Bisnis & Startup',
-                                                    ],
-                                                    [
-                                                        'route' => 'news.studentpreneur',
-                                                        'label' => 'Program Studentpreneur',
-                                                    ],
-                                                    ['route' => 'news.kkn-magang', 'label' => 'KKN & Magang Mahasiswa'],
-                                                    [
-                                                        'route' => 'news.kompetisi-bisnis',
-                                                        'label' => 'Kompetisi & Lomba Bisnis',
-                                                    ],
-                                                ],
                                             ],
                                         ],
                                     ],
                                     [
-                                        'route' => 'formulir-pendaftaran.*',
+                                        'route' => 'formulir-pendaftaran.index',
                                         'label' => 'Gabung',
-                                        'anchor' => '#join-community',
                                     ],
                                 ];
                             @endphp
@@ -189,82 +97,62 @@
                                 @if (isset($item['dropdown']))
                                     {{-- Menu dengan dropdown --}}
                                     <div class="relative group">
-                                        <button
+                                        <a href="{{ route($item['mainRoute']) }}"
                                             class="@if (request()->routeIs($item['route'])) bg-primary-50 text-primary-700 border-primary-200 @else text-secondary-700 hover:text-primary-600 hover:bg-accent-50 border-transparent @endif px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 border flex items-center"
-                                            onmouseover="showDropdown('{{ $item['route'] }}')"
-                                            onmouseout="hideDropdown('{{ $item['route'] }}')"
-                                            @if ($item['route'] === request()->route()->getName()) aria-current="page" @endif>
+                                            @if (request()->routeIs($item['route'])) aria-current="page" @endif>
                                             {{ $item['label'] }}
                                             <svg class="ml-1 w-4 h-4 transform group-hover:rotate-180 transition-transform duration-200"
                                                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                     d="M19 9l-7 7-7-7" />
                                             </svg>
-                                        </button>
+                                        </a>
 
-                                        {{-- Mega Dropdown --}}
-                                        <div id="dropdown-{{ $item['route'] }}"
-                                            class="absolute left-0 mt-2 w-screen max-w-5xl bg-white rounded-xl shadow-warm-lg border border-accent-100 opacity-0 invisible transform translate-y-2 transition-all duration-300 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 z-50"
-                                            onmouseenter="showDropdown('{{ $item['route'] }}')"
-                                            onmouseleave="hideDropdown('{{ $item['route'] }}')">
-                                            <div class="p-6">
-                                                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                                    @foreach ($item['dropdown'] as $sectionKey => $section)
-                                                        <div class="space-y-3">
-                                                            <div class="border-b border-accent-100 pb-3 mb-3">
-                                                                <h4 class="font-semibold text-secondary-800 text-sm mb-1">
-                                                                    {{ $section['label'] }}
-                                                                </h4>
-                                                                <p class="text-xs text-secondary-500 leading-relaxed">
-                                                                    {{ $section['description'] }}
-                                                                </p>
+                                        {{-- Dropdown Menu --}}
+                                        <div
+                                            class="absolute left-0 mt-2 w-80 bg-white rounded-xl shadow-warm-lg border border-accent-100 opacity-0 invisible transform translate-y-2 transition-all duration-300 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 z-50">
+                                            <div class="p-4">
+                                                <div class="space-y-1">
+                                                    @foreach ($item['dropdown'] as $section)
+                                                        <a href="{{ route('events.index', ['category' => $section['category']]) }}"
+                                                            class="block px-4 py-3 rounded-lg text-secondary-700 hover:bg-primary-50 hover:text-primary-700 transition-all duration-200 group/item">
+                                                            <div class="flex items-start">
+                                                                <svg class="w-4 h-4 mt-0.5 mr-3 text-primary-500 opacity-0 group-hover/item:opacity-100 transition-opacity flex-shrink-0"
+                                                                    fill="currentColor" viewBox="0 0 20 20">
+                                                                    <path fill-rule="evenodd"
+                                                                        d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                                                                        clip-rule="evenodd" />
+                                                                </svg>
+                                                                <div>
+                                                                    <div class="font-medium text-sm mb-0.5">
+                                                                        {{ $section['label'] }}
+                                                                    </div>
+                                                                </div>
                                                             </div>
-                                                            <div class="space-y-2">
-                                                                @foreach ($section['items'] as $subItem)
-                                                                    <a href="#"
-                                                                        class="block text-sm text-secondary-600 hover:text-primary-600 hover:bg-primary-50 px-3 py-2 rounded-lg transition-all duration-200 group/item">
-                                                                        <div class="flex items-start">
-                                                                            <svg class="w-3 h-3 mt-0.5 mr-2 text-primary-400 opacity-0 group-hover/item:opacity-100 transition-opacity"
-                                                                                fill="currentColor" viewBox="0 0 20 20">
-                                                                                <path fill-rule="evenodd"
-                                                                                    d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                                                                                    clip-rule="evenodd" />
-                                                                            </svg>
-                                                                            <span>{{ $subItem['label'] }}</span>
-                                                                        </div>
-                                                                    </a>
-                                                                @endforeach
-                                                            </div>
-                                                        </div>
+                                                        </a>
                                                     @endforeach
                                                 </div>
 
                                                 {{-- Footer dalam dropdown --}}
-                                                <div class="border-t border-accent-100 mt-6 pt-4">
-                                                    <div class="flex items-center justify-between">
-                                                        <div class="text-sm text-secondary-500">
-                                                            Temukan berbagai program dan kegiatan untuk mengembangkan UMKM
-                                                            Anda
-                                                        </div>
-                                                        <a href="#"
-                                                            class="inline-flex items-center text-sm font-medium text-primary-600 hover:text-primary-700 transition-colors">
-                                                            Lihat Semua
-                                                            <svg class="ml-1 w-4 h-4" fill="none" stroke="currentColor"
-                                                                viewBox="0 0 24 24">
-                                                                <path stroke-linecap="round" stroke-linejoin="round"
-                                                                    stroke-width="2" d="M9 5l7 7-7 7" />
-                                                            </svg>
-                                                        </a>
-                                                    </div>
+                                                <div class="border-t border-accent-100 mt-4 pt-4">
+                                                    <a href="{{ route('events.index') }}"
+                                                        class="flex items-center justify-between text-sm font-medium text-primary-600 hover:text-primary-700 transition-colors px-4 py-2 hover:bg-primary-50 rounded-lg">
+                                                        <span>Lihat Semua Berita & Kegiatan</span>
+                                                        <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                                            viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                                stroke-width="2" d="M9 5l7 7-7 7" />
+                                                        </svg>
+                                                    </a>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 @else
                                     {{-- Menu biasa --}}
-                                    <a href="{{ $item['anchor'] ?? ($item['route'] !== 'contact' ? route('home') . $item['anchor'] : '#') }}"
+                                    <a href="{{ route($item['route']) }}"
                                         class="@if (request()->routeIs($item['route'])) bg-primary-50 text-primary-700 border-primary-200 @else text-secondary-700 hover:text-primary-600 hover:bg-accent-50 border-transparent @endif px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 border"
-                                        @if ($item['route'] === request()->route()->getName()) aria-current="page" @endif>
+                                        @if (request()->routeIs($item['route'])) aria-current="page" @endif>
                                         {{ $item['label'] }}
                                     </a>
                                 @endif
@@ -314,25 +202,18 @@
                                     </button>
 
                                     <div class="hidden pl-4 space-y-1" id="mobile-{{ $item['route'] }}">
-                                        @foreach ($item['dropdown'] as $sectionKey => $section)
-                                            <div class="py-2">
-                                                <div
-                                                    class="text-xs font-semibold text-secondary-500 uppercase tracking-wider mb-2 px-3">
-                                                    {{ $section['label'] }}
-                                                </div>
-                                                @foreach ($section['items'] as $subItem)
-                                                    <a href="#"
-                                                        class="block px-3 py-1.5 text-sm text-secondary-600 hover:text-primary-600 hover:bg-primary-50 rounded transition-colors">
-                                                        {{ $subItem['label'] }}
-                                                    </a>
-                                                @endforeach
-                                            </div>
+                                        @foreach ($item['dropdown'] as $section)
+                                            <a href="{{ route('events.index', ['category' => $section['category']]) }}"
+                                                class="block px-3 py-2 rounded-lg text-secondary-700 hover:text-primary-600 hover:bg-primary-50 transition-colors"
+                                                onclick="closeMobileMenu()">
+                                                <div class="font-medium text-sm mb-1">{{ $section['label'] }}</div>
+                                            </a>
                                         @endforeach
                                     </div>
                                 </div>
                             @else
                                 {{-- Regular mobile menu item --}}
-                                <a href="{{ $item['anchor'] ?? ($item['route'] !== 'contact' ? route('home') . $item['anchor'] : '#') }}"
+                                <a href="{{ route($item['route']) }}"
                                     class="@if (request()->routeIs($item['route'])) bg-primary-50 text-primary-700 @else text-secondary-700 hover:text-primary-600 hover:bg-accent-50 @endif block px-3 py-2 rounded-lg text-base font-medium transition-colors"
                                     onclick="closeMobileMenu()">
                                     {{ $item['label'] }}

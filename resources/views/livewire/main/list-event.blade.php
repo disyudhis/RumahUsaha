@@ -2,285 +2,397 @@
 
 use Livewire\Volt\Component;
 use App\Models\Event;
-use Carbon\Carbon;
+use Livewire\Attributes\Layout;
+use Livewire\WithPagination;
 
 new class extends Component {
-    public function with(): array
+    use WithPagination;
+
+    public $selectedCategory = 'all';
+    public $search = '';
+    public $showAll = true; // Untuk membedakan tampilan dashboard vs index
+    public $limit = 6; // Limit untuk dashboard
+    public $showHero = false; // Show hero section di index
+    public $showSearch = true; // Show search bar
+    public $showCategoryFilter = true; // Show category pills
+    public $showHeader = true; // Show section header
+    public $headerTitle = 'Berita & Kegiatan';
+    public $headerSubtitle = 'Informasi terkini seputar event, kolaborasi, dan pengembangan UMKM';
+
+    public function mount($category = null)
     {
-        // Ambil data dari database, jika kosong gunakan data statis
-        $events = Event::orderBy('event_date', 'desc')->limit(6)->get();
-
-        // Jika database kosong, gunakan data dummy untuk demo
-        if ($events->isEmpty()) {
-            $dummyEvents = collect([
-                [
-                    'id' => 1,
-                    'title' => 'Workshop "Foto Produk HP"',
-                    'event_date' => '2024-07-28',
-                    'description' => 'Belajar teknik fotografi produk menggunakan smartphone untuk meningkatkan kualitas foto produk UMKM Anda.',
-                ],
-                [
-                    'id' => 2,
-                    'title' => 'Bazaar UMKM Komunitas',
-                    'event_date' => '2024-08-15',
-                    'description' => 'Pameran dan penjualan produk-produk unggulan dari anggota komunitas UMKM.',
-                ],
-                [
-                    'id' => 3,
-                    'title' => 'Pelatihan Digital Marketing',
-                    'event_date' => '2024-09-05',
-                    'description' => 'Workshop lengkap tentang strategi pemasaran digital untuk UMKM di era modern.',
-                ],
-                [
-                    'id' => 4,
-                    'title' => 'Kolaborasi Bisnis Antar UMKM',
-                    'event_date' => '2024-09-20',
-                    'description' => 'Session networking dan diskusi peluang kolaborasi bisnis antar anggota komunitas.',
-                ],
-            ]);
-
-            $events = $dummyEvents;
-        }
-
-        // Transform data untuk menambahkan icon dan status
-        $transformedEvents = $events->map(function ($event) {
-            return [
-                'id' => $event['id'] ?? $event->id,
-                'icon' => $this->getEventIcon($event['title'] ?? $event->title),
-                'slug' => $event['slug'] ?? $event['title'],
-                'type' => $this->getEventType($event['title'] ?? $event->title),
-                'title' => $this->getEventTitle($event['title'] ?? $event->title),
-                'full_title' => $event['title'] ?? $event->title,
-                'event_date' => $event['event_date'] ?? $event->event_date,
-                'description' => $event['description'] ?? ($event->description ?? ''),
-                'status' => $this->getEventStatus($event['event_date'] ?? $event->event_date),
-            ];
-        });
-
-        return ['events' => $transformedEvents];
-    }
-
-    private function getEventIcon(string $title): string
-    {
-        if (str_contains(strtolower($title), 'workshop') || str_contains(strtolower($title), 'fotografi')) {
-            return '📸';
-        }
-        if (str_contains(strtolower($title), 'bazaar') || str_contains(strtolower($title), 'pameran')) {
-            return '🎪';
-        }
-        if (str_contains(strtolower($title), 'pelatihan') || str_contains(strtolower($title), 'training')) {
-            return '📚';
-        }
-        if (str_contains(strtolower($title), 'kolaborasi') || str_contains(strtolower($title), 'kerjasama')) {
-            return '🤝';
-        }
-        if (str_contains(strtolower($title), 'digital') || str_contains(strtolower($title), 'marketing')) {
-            return '💻';
-        }
-        return '📅'; // Default icon
-    }
-
-    private function getEventType(string $title): string
-    {
-        if (str_contains(strtolower($title), 'workshop')) {
-            return 'Workshop';
-        }
-        if (str_contains(strtolower($title), 'pelatihan')) {
-            return 'Pelatihan';
-        }
-        if (str_contains(strtolower($title), 'bazaar')) {
-            return 'Bazaar';
-        }
-        if (str_contains(strtolower($title), 'kolaborasi')) {
-            return 'Kolaborasi';
-        }
-        return 'Acara'; // Default type
-    }
-
-    private function getEventTitle(string $title): string
-    {
-        // Extract quoted content if exists
-        if (preg_match('/"([^"]+)"/', $title, $matches)) {
-            return $matches[1];
-        }
-
-        // Remove type prefix if exists
-        $title = preg_replace('/^(workshop|pelatihan|bazaar|kolaborasi):\s*/i', '', $title);
-
-        return $title;
-    }
-
-    private function getEventStatus($eventDate): string
-    {
-        if (!$eventDate) {
-            return 'ongoing';
-        }
-
-        $now = Carbon::now();
-        $event = Carbon::parse($eventDate);
-
-        if ($event->isFuture()) {
-            return 'upcoming';
-        } elseif ($event->isToday()) {
-            return 'ongoing';
+        // Set kategori dari URL parameter jika ada
+        if ($category && array_key_exists($category, Event::CATEGORIES)) {
+            $this->selectedCategory = $category;
+            $this->showHero = true; // Show hero jika ada kategori spesifik
         } else {
-            return 'completed';
+            $this->selectedCategory = 'all';
+            $this->showHero = true; // Show hero di halaman utama events
         }
     }
 
-    private function formatEventDate($eventDate): string
+    public function getCategoryDescription($category)
     {
-        if (!$eventDate) {
-            return 'Ongoing';
-        }
-
-        $date = Carbon::parse($eventDate);
-        $months = [
-            1 => 'Jan',
-            2 => 'Feb',
-            3 => 'Mar',
-            4 => 'Apr',
-            5 => 'Mei',
-            6 => 'Jun',
-            7 => 'Jul',
-            8 => 'Agu',
-            9 => 'Sep',
-            10 => 'Okt',
-            11 => 'Nov',
-            12 => 'Des',
+        $descriptions = [
+            'all' => 'Temukan berbagai event kolaborasi, workshop, dan kegiatan pemberdayaan UMKM dari semua kategori',
+            'kolaborasi-sosial' => 'Berisi liputan kegiatan yang fokus pada penguatan kapasitas UMKM melalui pendampingan, advokasi, maupun program pemberdayaan yang dilakukan bersama komunitas, perguruan tinggi, dan masyarakat.',
+            'riset-inovasi' => 'Memuat berita dan publikasi hasil penelitian, uji coba, maupun inovasi teknologi yang diterapkan untuk mendukung peningkatan daya saing dan keberlanjutan UMKM.',
+            'pengembangan-kapasitas' => 'Rubrik pelatihan, workshop, mentoring, hingga seminar yang ditujukan untuk meningkatkan keterampilan, literasi digital, serta strategi bisnis UMKM agar lebih siap menghadapi tantangan pasar.',
+            'kemitraan-strategis' => 'Menginformasikan kerja sama formal maupun non-formal antara UMKM, perguruan tinggi, pemerintah, lembaga keuangan, dan stakeholder lainnya dalam bentuk MoU, joint program, hingga event kolaboratif.',
+            'info-kampus' => 'Menampilkan kegiatan kampus yang terhubung dengan dunia usaha, seperti expo, inkubator bisnis, studentpreneur, hingga sinergi mahasiswa-dosen dengan UMKM dalam berbagai program nyata.',
         ];
 
-        return $date->day . ' ' . $months[$date->month];
+        return $descriptions[$category] ?? 'Temukan berbagai event kolaborasi, workshop, dan kegiatan pemberdayaan UMKM';
     }
 
-    public function viewEvent($eventId)
+    public function with(): array
     {
-        return $this->redirect(route('main.events.show', ['slug' => $eventId]), navigate: true);
+        $query = Event::query()->orderBy('event_date', 'desc');
+
+        // Filter berdasarkan kategori
+        if ($this->selectedCategory !== 'all') {
+            $query->where('categories', $this->selectedCategory);
+        }
+
+        // Filter berdasarkan pencarian
+        if (!empty($this->search)) {
+            $query->where(function ($q) {
+                $q->where('title', 'like', '%' . $this->search . '%')->orWhere('description', 'like', '%' . $this->search . '%');
+            });
+        }
+
+        // Apply limit atau pagination
+        $events = $this->showAll ? $query->paginate(9) : $query->limit($this->limit)->get();
+
+        return [
+            'events' => $events,
+            'categories' => Event::CATEGORIES,
+            'categoryDescription' => $this->getCategoryDescription($this->selectedCategory),
+        ];
+    }
+
+    public function selectCategory($category)
+    {
+        $this->selectedCategory = $category;
+        $this->resetPage();
+
+        // Update URL jika di halaman full view
+        if ($this->showAll) {
+            $url = $category === 'all' ? route('events.index') : route('events.index', ['category' => $category]);
+
+            $this->dispatch('update-url', url: $url);
+        }
+    }
+
+    public function updatedSearch()
+    {
+        $this->resetPage();
+    }
+
+    public function updatedSelectedCategory()
+    {
+        $this->resetPage();
     }
 }; ?>
 
-<div class="px-4 sm:px-6 mb-8">
-    <div class="flex items-center justify-between mb-6">
-            <h2 class="text-2xl font-bold text-gray-900">BERITA & KEGIATAN KOMUNITAS</h2>
-        </div>
-    @if ($events->count() > 0)
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            @foreach ($events as $event)
-                <div
-                    class="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden border border-gray-100 group">
-                    {{-- Header --}}
-                    <div class="p-6 border-b border-gray-100">
-                        <div class="flex items-start justify-between">
-                            <div class="flex items-center">
-                                {{-- Icon --}}
-                                <div
-                                    class="w-12 h-12 bg-gradient-to-br from-orange-100 to-orange-50 rounded-xl flex items-center justify-center mr-4 group-hover:from-orange-200 group-hover:to-orange-100 transition-colors duration-300">
-                                    <span class="text-xl">{{ $event['icon'] }}</span>
-                                </div>
+@if ($showAll)
+    {{-- FULL PAGE VIEW (Index) --}}
+    <div class="min-h-screen bg-gradient-to-br from-primary-50 via-accent-50 to-primary-100 py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-                                {{-- Event Info --}}
-                                <div class="flex-1">
-                                    <div class="flex items-center gap-2 mb-1">
-                                        <span
-                                            class="bg-orange-100 text-orange-700 px-2 py-1 rounded-full text-xs font-medium">
-                                            {{ $event['type'] }}
-                                        </span>
-                                        @if ($event['status'] === 'upcoming')
-                                            <span
-                                                class="bg-green-100 text-green-700 px-2 py-1 rounded-full text-xs font-medium">
-                                                Segera
-                                            </span>
-                                        @elseif($event['status'] === 'ongoing')
-                                            <span
-                                                class="bg-blue-100 text-blue-700 px-2 py-1 rounded-full text-xs font-medium">
-                                                Berlangsung
-                                            </span>
-                                        @endif
-                                    </div>
-
-                                    <h3 class="font-bold text-gray-900 text-base leading-tight">
-                                        {{ $event['title'] ? $event['title'] : $event['full_title'] }}
-                                    </h3>
-                                </div>
-                            </div>
-
-                            {{-- Date --}}
-                            <div class="text-right flex-shrink-0 ml-4">
-                                <div class="bg-gray-50 rounded-lg px-3 py-2 text-center min-w-[60px]">
-                                    <div class="text-lg font-bold text-gray-900">
-                                        {{ $this->formatEventDate($event['event_date']) }}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    {{-- Content --}}
-                    <div class="p-6">
-                        {{-- Description --}}
-                        @if ($event['description'])
-                            <p class="text-gray-600 text-sm mb-4 line-clamp-3">
-                                {{ $event['description'] }}
-                            </p>
+            @if ($showHero)
+                {{-- Hero Section --}}
+                <div class="mb-12 text-center">
+                    <h1 class="text-4xl md:text-5xl font-bold text-secondary-900 mb-4 font-aleo">
+                        @if ($selectedCategory !== 'all')
+                            {{ $categories[$selectedCategory] }}
+                        @else
+                            Berita & Kegiatan UMKM
                         @endif
+                    </h1>
+                    <p class="text-lg text-secondary-700 max-w-3xl mx-auto font-inter leading-relaxed">
+                        {{ $categoryDescription }}
+                    </p>
+                    <div class="mt-6 w-24 h-1 bg-gradient-to-r from-primary-400 to-primary-600 mx-auto rounded-full">
+                    </div>
+                </div>
+            @endif
 
-                        {{-- Status Indicator --}}
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center text-sm text-gray-500">
-                                <span class="mr-1">📅</span>
-                                <span>{{ Carbon::parse($event['event_date'])->format('d M Y') }}</span>
-                            </div>
-
-                            {{-- Action Button --}}
-                            <button wire:click="viewEvent('{{ $event['slug'] }}')"
-                                class="bg-primary-400 hover:bg-primary-300 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200 flex items-center">
-                                Detail
+            @if ($showCategoryFilter)
+                {{-- Category Pills --}}
+                <div class="mb-8 overflow-x-auto">
+                    <div class="flex gap-3 justify-center flex-wrap min-w-max px-4">
+                        <button wire:click="selectCategory('all')"
+                            class="px-6 py-2.5 rounded-full font-medium transition-all duration-200 font-inter text-sm
+                            {{ $selectedCategory === 'all'
+                                ? 'bg-gradient-to-r from-primary-500 to-primary-600 text-white shadow-warm'
+                                : 'bg-white text-secondary-700 hover:bg-primary-50 hover:text-primary-600 border border-primary-200' }}">
+                            Semua Event
+                        </button>
+                        @foreach ($categories as $key => $label)
+                            <button wire:click="selectCategory('{{ $key }}')"
+                                class="px-6 py-2.5 rounded-full font-medium transition-all duration-200 font-inter text-sm whitespace-nowrap
+                                {{ $selectedCategory === $key
+                                    ? 'bg-gradient-to-r from-primary-500 to-primary-600 text-white shadow-warm'
+                                    : 'bg-white text-secondary-700 hover:bg-primary-50 hover:text-primary-600 border border-primary-200' }}">
+                                {{ $label }}
                             </button>
+                        @endforeach
+                    </div>
+                </div>
+            @endif
+
+            @if ($showSearch)
+                {{-- Search Bar --}}
+                <div class="mb-10">
+                    <div class="max-w-xl mx-auto">
+                        <div class="relative">
+                            <input type="text" wire:model.live.debounce.300ms="search"
+                                placeholder="Cari event berdasarkan judul atau deskripsi..."
+                                class="w-full px-6 py-4 pl-12 text-secondary-900 bg-white border-2 border-primary-200 rounded-xl focus:ring-2 focus:ring-primary-400 focus:border-primary-400 shadow-warm transition-all duration-200 font-inter">
+                            <svg class="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-secondary-400"
+                                fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                            </svg>
                         </div>
                     </div>
                 </div>
-            @endforeach
-        </div>
+            @endif
 
-        {{-- Show More Button --}}
-        {{-- <div class="mt-8 text-center">
-            <a href="#"
-                class="inline-flex items-center px-8 py-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white font-semibold rounded-xl hover:from-orange-600 hover:to-orange-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
-                <span class="mr-2">📰</span>
-                Lihat Semua Berita & Kegiatan
-            </a>
-        </div> --}}
-    @else
-        {{-- Empty State --}}
-        <div class="text-center py-16">
-            <div class="mb-6">
-                <div
-                    class="w-24 h-24 bg-gradient-to-br from-orange-100 to-orange-50 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <span class="text-4xl">📰</span>
+            {{-- Events Grid --}}
+            @if ($events->count() > 0)
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+                    @foreach ($events as $event)
+                        <div
+                            class="bg-white rounded-2xl shadow-warm overflow-hidden hover:shadow-warm-xl transition-all duration-300 transform hover:-translate-y-1">
+                            {{-- Event Image --}}
+                            <div
+                                class="h-48 bg-gradient-to-br from-primary-400 via-primary-500 to-accent-500 relative overflow-hidden">
+                                @if ($event->image)
+                                    <img src="{{ asset('storage/' . $event->image) }}" alt="{{ $event->title }}"
+                                        class="w-full h-full object-cover">
+                                @else
+                                    <div class="flex items-center justify-center h-full">
+                                        <svg class="w-20 h-20 text-white opacity-70" fill="none"
+                                            stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                        </svg>
+                                    </div>
+                                @endif
+
+                                {{-- Category Badge --}}
+                                <div class="absolute top-4 left-4">
+                                    <span
+                                        class="px-3 py-1 bg-white/95 backdrop-blur-sm text-xs font-semibold text-secondary-800 rounded-full shadow-md font-inter">
+                                        {{ $categories[$event->categories] ?? 'Uncategorized' }}
+                                    </span>
+                                </div>
+                            </div>
+
+                            {{-- Event Content --}}
+                            <div class="p-6">
+                                {{-- Event Date --}}
+                                <div class="flex items-center text-sm text-secondary-600 mb-3">
+                                    <svg class="w-4 h-4 mr-2 text-primary-500" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                    <span class="font-inter">{{ $event->formatted_event_date }}</span>
+                                </div>
+
+                                {{-- Event Title --}}
+                                <h3 class="text-xl font-bold text-secondary-900 mb-3 line-clamp-2 font-aleo">
+                                    {{ $event->title }}
+                                </h3>
+
+                                {{-- Event Description --}}
+                                <p class="text-secondary-700 text-sm mb-4 line-clamp-3 font-inter leading-relaxed">
+                                    {{ $event->description }}
+                                </p>
+
+                                {{-- View Details Button --}}
+                                <a href="{{ route('main.events.show', $event->slug) }}"
+                                    class="inline-flex items-center text-primary-600 hover:text-primary-700 font-semibold text-sm transition-colors duration-200 group font-inter">
+                                    Lihat Detail
+                                    <svg class="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform duration-200"
+                                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M9 5l7 7-7 7" />
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                    @endforeach
                 </div>
-            </div>
-            <h4 class="text-xl font-semibold text-gray-900 mb-3">
-                Belum Ada Berita & Kegiatan
-            </h4>
-            <p class="text-gray-500 mb-8 max-w-md mx-auto">
-                Stay tuned! Kami akan segera menghadirkan berbagai kegiatan menarik dan berita terbaru untuk komunitas
-                UMKM.
-            </p>
-            <a href="#"
-                class="inline-flex items-center px-8 py-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white font-semibold rounded-xl hover:from-orange-600 hover:to-orange-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
-                <span class="mr-2">📝</span>
-                Buat Kegiatan Baru
-            </a>
+
+                {{-- Pagination --}}
+                <div class="mt-8">
+                    {{ $events->links() }}
+                </div>
+            @else
+                {{-- Empty State --}}
+                <div class="text-center py-16 bg-white rounded-2xl shadow-warm max-w-2xl mx-auto">
+                    <svg class="mx-auto h-24 w-24 text-primary-300" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <h3 class="mt-4 text-xl font-semibold text-secondary-900 font-aleo">Tidak ada event ditemukan</h3>
+                    <p class="mt-2 text-secondary-600 font-inter">
+                        @if ($search)
+                            Tidak ada event yang cocok dengan pencarian "{{ $search }}"
+                        @else
+                            Belum ada event tersedia untuk kategori ini
+                        @endif
+                    </p>
+                    @if ($search || $selectedCategory !== 'all')
+                        <button wire:click="selectCategory('all')" onclick="@this.set('search', '')"
+                            class="mt-6 px-6 py-3 bg-gradient-to-r from-primary-500 to-primary-600 text-white rounded-xl hover:from-primary-600 hover:to-primary-700 transition-all duration-200 shadow-warm hover:shadow-warm-lg font-inter font-medium">
+                            Lihat Semua Event
+                        </button>
+                    @endif
+                </div>
+            @endif
+
         </div>
-    @endif
-    @push('styles')
-        <style>
-            .line-clamp-3 {
-                display: -webkit-box;
-                -webkit-line-clamp: 3;
-                -webkit-box-orient: vertical;
-                overflow: hidden;
-            }
-        </style>
+    </div>
+
+    @push('scripts')
+        <script>
+            document.addEventListener('livewire:init', () => {
+                Livewire.on('update-url', (event) => {
+                    window.history.pushState({}, '', event.url);
+                });
+            });
+        </script>
     @endpush
-</div>
+@else
+    {{-- DASHBOARD VIEW (Compact) --}}
+    <section class="py-12 bg-gradient-to-br from-white via-accent-50/30 to-primary-50/30">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+            @if ($showHeader)
+                {{-- Section Header --}}
+                <div class="flex items-center justify-between mb-8">
+                    <div>
+                        <h2 class="text-3xl md:text-4xl font-bold text-secondary-900 font-aleo mb-2">
+                            {{ $headerTitle }}
+                        </h2>
+                        <p class="text-secondary-600 font-inter text-base md:text-lg">
+                            {{ $headerSubtitle }}
+                        </p>
+                    </div>
+                    <a href="{{ route('events.index') }}"
+                        class="hidden md:inline-flex items-center px-5 py-2.5 bg-gradient-to-r from-primary-500 to-primary-600 text-white rounded-xl hover:from-primary-600 hover:to-primary-700 transition-all duration-200 shadow-warm hover:shadow-warm-lg font-inter font-medium group">
+                        Lihat Semua
+                        <svg class="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform duration-200"
+                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                        </svg>
+                    </a>
+                </div>
+            @endif
+
+            @if ($events->count() > 0)
+                {{-- Grid Container --}}
+                <div class="relative">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        @foreach ($events as $event)
+                            <article
+                                class="bg-white rounded-xl shadow-warm hover:shadow-warm-xl transition-all duration-300 overflow-hidden group">
+                                {{-- Compact Image --}}
+                                <div
+                                    class="relative h-44 bg-gradient-to-br from-primary-400 to-accent-500 overflow-hidden">
+                                    @if ($event->image)
+                                        <img src="{{ asset('storage/' . $event->image) }}" alt="{{ $event->title }}"
+                                            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                                    @else
+                                        <div class="flex items-center justify-center h-full">
+                                            <svg class="w-16 h-16 text-white opacity-60" fill="none"
+                                                stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                            </svg>
+                                        </div>
+                                    @endif
+
+                                    {{-- Category Badge --}}
+                                    <div class="absolute top-3 left-3">
+                                        <span
+                                            class="px-2.5 py-1 bg-white/95 backdrop-blur-sm text-xs font-semibold text-secondary-800 rounded-lg shadow-sm font-inter">
+                                            {{ $categories[$event->categories] ?? 'Event' }}
+                                        </span>
+                                    </div>
+
+                                    {{-- Date Badge --}}
+                                    <div class="absolute bottom-3 right-3">
+                                        <div class="bg-white/95 backdrop-blur-sm rounded-lg px-2.5 py-1.5 shadow-sm">
+                                            <div class="flex items-center gap-1.5">
+                                                <svg class="w-3.5 h-3.5 text-primary-600" fill="none"
+                                                    stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                                </svg>
+                                                <span class="text-xs font-medium text-secondary-800 font-inter">
+                                                    {{ \Carbon\Carbon::parse($event->event_date)->format('d M Y') }}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {{-- Compact Content --}}
+                                <div class="p-5">
+                                    <h3
+                                        class="text-lg font-bold text-secondary-900 mb-2 line-clamp-2 font-aleo leading-tight group-hover:text-primary-600 transition-colors duration-200">
+                                        {{ $event->title }}
+                                    </h3>
+
+                                    <p class="text-secondary-600 text-sm mb-4 line-clamp-2 font-inter leading-relaxed">
+                                        {{ $event->description }}
+                                    </p>
+
+                                    <a href="{{ route('main.events.show', $event->slug) }}"
+                                        class="inline-flex items-center text-primary-600 hover:text-primary-700 font-semibold text-sm transition-colors duration-200 group/link font-inter">
+                                        Selengkapnya
+                                        <svg class="w-4 h-4 ml-1 group-hover/link:translate-x-1 transition-transform duration-200"
+                                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M9 5l7 7-7 7" />
+                                        </svg>
+                                    </a>
+                                </div>
+                            </article>
+                        @endforeach
+                    </div>
+                </div>
+
+                {{-- Mobile View All Button --}}
+                <div class="mt-8 text-center md:hidden">
+                    <a href="{{ route('events.index') }}"
+                        class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-primary-500 to-primary-600 text-white rounded-xl hover:from-primary-600 hover:to-primary-700 transition-all duration-200 shadow-warm hover:shadow-warm-lg font-inter font-medium">
+                        Lihat Semua Event
+                        <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                        </svg>
+                    </a>
+                </div>
+            @else
+                {{-- Empty State Compact --}}
+                <div class="text-center py-12 bg-white/50 rounded-xl border-2 border-dashed border-primary-200">
+                    <svg class="mx-auto h-16 w-16 text-primary-300" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    <p class="mt-4 text-secondary-600 font-inter">Belum ada event tersedia saat ini</p>
+                </div>
+            @endif
+
+        </div>
+    </section>
+@endif

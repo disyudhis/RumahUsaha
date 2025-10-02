@@ -69,7 +69,7 @@ new class extends Component {
             'description' => $this->description,
             'price' => $this->price,
             'category' => $this->category,
-            'is_active' => $this->is_active,
+            'is_active' => true,
         ];
 
         if ($this->new_image) {
@@ -282,15 +282,6 @@ new class extends Component {
                                     @error('description')
                                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                     @enderror
-                                </div>
-
-                                <!-- Status Aktif -->
-                                <div class="flex items-center gap-3 p-4 bg-neutral-50 rounded-lg">
-                                    <input type="checkbox" id="is_active" wire:model="is_active"
-                                        class="w-5 h-5 text-primary-600 border-neutral-300 rounded focus:ring-2 focus:ring-primary-500">
-                                    <label for="is_active" class="text-sm font-medium text-neutral-800">
-                                        Tampilkan produk ini di katalog
-                                    </label>
                                 </div>
 
                                 <!-- Action Buttons -->

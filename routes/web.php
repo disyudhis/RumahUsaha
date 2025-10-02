@@ -10,6 +10,7 @@ Route::view('/formulir-pendaftaran', 'main.formulir-pendaftaran')->name('formuli
 Route::view('/products', 'main.list-product')->name('main.products.index');
 Route::view('/detail-product/{slug}', 'main.detail-product')->name('main.products.show');
 Route::view('/detail-event/{slug}', 'main.detail-event')->name('main.events.show');
+Route::view('/events/{category?}', 'main.list-event')->name('events.index');
 // Route::post('/logout')
 // Volt::route('/detail-umkm/{id}', 'main.detail-umkm')->name('business.show');
 // Route::get('detail-umkm/{id}', fn)->name('business.show');

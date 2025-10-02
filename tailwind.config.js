@@ -92,7 +92,7 @@ export default {
                     950: '#0c0a09',
                 }
             },
-            backgroundImage: {
+        backgroundImage: {
                 'warm-gradient': 'linear-gradient(135deg, #fed7aa 0%, #fdba74 50%, #fb923c 100%)',
                 'hero-gradient': 'linear-gradient(135deg, #fff7ed 0%, #ffedd5 50%, #fed7aa 100%)',
                 'card-gradient': 'linear-gradient(145deg, #ffffff 0%, #fafaf9 100%)',

@@ -156,7 +156,8 @@ new class extends Component {
                         </button> --}}
 
                         <div class="flex space-x-3">
-                            <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $product->umkmProfile->whatsapp) }}" target="_blank"
+                            <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $product->umkmProfile->whatsapp) }}"
+                                target="_blank"
                                 class="flex-1 bg-success-500 text-white py-3 px-4 rounded-lg font-medium hover:bg-success-600 transition-colors">
                                 <svg class="w-4 h-4 inline-block mr-2" fill="currentColor" viewBox="0 0 20 20">
                                     <path
@@ -164,14 +165,17 @@ new class extends Component {
                                 </svg>
                                 WhatsApp
                             </a>
-                            {{-- <button
-                                class="flex-1 bg-neutral-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-neutral-700 transition-colors">
-                                <svg class="w-4 h-4 inline-block mr-2" fill="currentColor" viewBox="0 0 20 20">
-                                    <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
-                                    <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
-                                </svg>
-                                Email
-                            </button> --}}
+                            @if ($product->umkmProfile->instagram)
+                                <a href="https://instagram.com/{{ ltrim($product->umkmProfile->instagram, '@') }}"
+                                    target="_blank"
+                                    class="flex-1 bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 text-white py-3 px-4 rounded-lg font-medium hover:opacity-90 transition-all">
+                                    <svg class="w-4 h-4 inline-block mr-2" fill="currentColor" viewBox="0 0 24 24">
+                                        <path
+                                            d="M7.75 2h8.5A5.75 5.75 0 0122 7.75v8.5A5.75 5.75 0 0116.25 22h-8.5A5.75 5.75 0 012 16.25v-8.5A5.75 5.75 0 017.75 2zm0 1.5A4.25 4.25 0 003.5 7.75v8.5A4.25 4.25 0 007.75 20.5h8.5a4.25 4.25 0 004.25-4.25v-8.5A4.25 4.25 0 0016.25 3.5h-8.5zm9.25 2.75a1 1 0 110 2 1 1 0 010-2zM12 7a5 5 0 110 10 5 5 0 010-10zm0 1.5a3.5 3.5 0 100 7 3.5 3.5 0 000-7z" />
+                                    </svg>
+                                    Instagram
+                                </a>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -209,7 +213,7 @@ new class extends Component {
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                     @foreach ($relatedProducts as $related)
-                        <a href="{{ route('main.products.show', $related->id) }}"
+                        <a href="{{ route('main.products.show', $related->slug) }}"
                             class="group bg-white rounded-xl shadow-md hover:shadow-warm-lg border border-neutral-200 hover:border-primary-300 transition-all duration-300 overflow-hidden">
                             <div class="aspect-square bg-neutral-100 overflow-hidden">
                                 @if ($related->image)

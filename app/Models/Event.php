@@ -18,7 +18,15 @@ class Event extends Model
         ];
     }
 
-    protected $fillable = ['title', 'slug', 'description', 'event_date', 'image'];
+    const CATEGORIES = [
+        'kolaborasi-sosial' => 'Kolaborasi Sosial & Pemberdayaan UMKM',
+        'riset-inovasi' => 'Riset & Inovasi untuk Solusi UMKM',
+        'pengembangan-kapasitas' => 'Pengembangan Kapasitas & Keterampilan UMKM',
+        'kemitraan-strategis' => 'Kemitraan Strategis & Jejaring Kolaborasi',
+        'info-kampus' => 'Info Kampus & Kolaborasi UMKM',
+    ];
+
+    protected $fillable = ['title', 'categories', 'slug', 'description', 'event_date', 'image'];
 
     protected $casts = [
         'event_date' => 'datetime',

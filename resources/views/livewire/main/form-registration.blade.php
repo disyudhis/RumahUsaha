@@ -28,6 +28,7 @@ new class extends Component {
     public $description = '';
     public $logo;
     public $terms = false;
+    public $asal_komunitas = '';
 
     // UI State
     public $isSubmitting = false;
@@ -45,6 +46,7 @@ new class extends Component {
             'category' => ['required', 'string', 'in:' . implode(',', array_keys(UmkmProfile::CATEGORIES))],
             'whatsapp' => ['required', 'string', 'regex:/^[8][0-9]{8,12}$/'],
             'instagram' => ['nullable', 'string', 'max:30', 'regex:/^[a-zA-Z0-9._]+$/'],
+            'asal_komunitas' => ['required', 'string', 'max:255'],
             'description' => ['required', 'string', 'max:1000'],
             'logo' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
         ];
@@ -103,6 +105,7 @@ new class extends Component {
                     'categories' => $validatedData['category'],
                     'whatsapp' => $validatedData['whatsapp'],
                     'instagram' => $validatedData['instagram'],
+                    'asal_komunitas' => $validatedData['asal_komunitas'], // Tambahkan ini
                     'description' => $validatedData['description'],
                     'logo' => $logoPath,
                     'is_active' => false,
@@ -125,7 +128,7 @@ new class extends Component {
 
     private function resetForm()
     {
-        $this->reset(['name', 'email', 'password', 'password_confirmation', 'business_name', 'owner_name', 'address', 'kecamatan', 'category', 'whatsapp', 'instagram', 'description', 'logo', 'terms']);
+        $this->reset(['name', 'email', 'password', 'password_confirmation', 'business_name', 'owner_name', 'address', 'kecamatan', 'category', 'whatsapp', 'instagram', 'asal_komunitas', 'description', 'logo', 'terms']);
     }
 }; ?>
 
@@ -422,6 +425,21 @@ new class extends Component {
                                     class="w-full px-4 py-3 border bg-gray-50 border-accent-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors @error('owner_name') border-red-300 @enderror"
                                     placeholder="Nama pemilik usaha">
                                 @error('owner_name')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <div>
+                                <label for="asal_komunitas" class="block text-sm font-medium text-secondary-700 mb-2">
+                                    Asal Komunitas <span class="text-red-500">*</span>
+                                </label>
+                                <input type="text" id="asal_komunitas" wire:model.blur="asal_komunitas" required
+                                    class="w-full px-4 py-3 border border-accent-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors @error('asal_komunitas') border-red-300 @enderror"
+                                    placeholder="Contoh: Komunitas UMKM Bandung">
+                                <p class="mt-1 text-xs text-secondary-500">
+                                    Sebutkan nama komunitas atau organisasi UMKM yang Anda ikuti
+                                </p>
+                                @error('asal_komunitas')
                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
                             </div>

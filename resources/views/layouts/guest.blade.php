@@ -97,20 +97,19 @@
             </div>
 
             <div class="relative z-10 flex flex-col justify-center w-full px-12 text-white">
-                <div class="float-animation mb-8">
-                    <svg class="w-20 h-20 mx-auto" viewBox="0 0 24 24" fill="none"
-                        xmlns="http://www.w3.org/2000/svg">
+                <div class="flex items-center justify-center gap-3 mb-8">
+                    <svg class="w-10 text-white" fill="currentColor" viewBox="0 0 20 20">
                         <path
-                            d="M3 9L12 2L21 9V20C21 20.5304 20.7893 21.0391 20.4142 21.4142C20.0391 21.7893 19.5304 22 19 22H5C4.46957 22 3.96086 21.7893 3.58579 21.4142C3.21071 21.0391 3 20.5304 3 20V9Z"
-                            fill="currentColor" opacity="0.9" />
-                        <path d="M9 22V12H15V22" fill="currentColor" opacity="0.7" />
+                            d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
                     </svg>
+
+                    <h1 class="text-4xl font-bold text-center">BIZHOUSE.ID</h1>
                 </div>
 
-                <h1 class="text-4xl font-bold mb-3 text-center">BIZHOUSE.ID</h1>
                 <p class="text-lg text-center text-primary-50 max-w-md mx-auto mb-12">
                     Kelola dan kembangkan bisnis UMKM Anda dengan mudah dalam satu platform terpadu
                 </p>
+
 
                 <!-- Features Section -->
                 <div class="space-y-6 max-w-lg mx-auto">
@@ -198,18 +197,16 @@
                 <!-- Logo for mobile -->
                 <div class="lg:hidden text-center mb-10">
                     <a href="/" wire:navigate
-                        class="mx-auto w-fit flex items-center justify-center font-bold text-secondary-800 transition duration-200 hover:text-secondary-600">
-
+                        class="mx-auto w-fit flex items-center text-xl font-bold text-secondary-800 hover:text-primary-600 transition-colors">
                         <!-- Icon Wrapper -->
-                        <div class="w-10 h-10 bg-fix-400 rounded-xl flex items-center justify-center shadow-md mr-3">
-                            <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <div class="w-8 h-8 bg-fix-400 rounded-lg flex items-center justify-center mr-3">
+                            <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
                                 <path
                                     d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
                             </svg>
                         </div>
-
                         <!-- Brand Text -->
-                        <span class="text-lg tracking-wide">BIZHOUSE.ID</span>
+                        <span class="tracking-wide">BIZHOUSE.ID</span>
                     </a>
 
                     <!-- Subtext -->
