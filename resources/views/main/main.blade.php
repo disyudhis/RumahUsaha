@@ -40,7 +40,7 @@
                 {{-- Section Header --}}
                 <div class="text-center mb-10">
                     <h2 class="text-3xl md:text-4xl font-bold text-neutral-800 mb-3 font-aleo">
-                        Support By
+                        Supported By
                     </h2>
                     <div class="mt-4 w-24 h-1 bg-gradient-to-r from-primary-400 to-primary-600 mx-auto rounded-full"></div>
                 </div>
@@ -51,19 +51,18 @@
                         class="bg-white rounded-2xl shadow-warm-lg p-8 md:p-12 hover:shadow-warm-xl transition-all duration-500 transform hover:scale-[1.02]">
                         <div class="flex flex-col md:flex-row items-center gap-8">
                             {{-- Logo Section --}}
-                            <div class="flex-shrink-0">
-                                <div
-                                    class="w-full h-full md:w-1/2 md:h-1/2 flex items-center justify-center p-6 shadow-inner">
+                            <div class="flex-shrink-0 flex items-center justify-center w-full">
+                                <div class="flex items-center justify-center p-6 shadow-inner">
                                     <a href="https://lppm.unisma.ac.id/#">
-                                        {{-- Replace this placeholder with actual logo --}}
                                         <img src="{{ asset('assets/sponsor-unisma.jpeg') }}" alt="Partner Name"
-                                            class="max-w-full max-h-full object-contain items-center">
+                                            class="max-w-80 max-h-40 object-contain mx-auto">
                                     </a>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
     </section>
