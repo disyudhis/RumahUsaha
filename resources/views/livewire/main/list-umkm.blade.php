@@ -62,14 +62,14 @@ new class extends Component {
             $query->where(function ($q) {
                 $q->where('business_name', 'like', '%' . $this->searchTerm . '%')
                   ->orWhere('owner_name', 'like', '%' . $this->searchTerm . '%')
-                  ->orWhere('business_description', 'like', '%' . $this->searchTerm . '%')
+                  ->orWhere('description', 'like', '%' . $this->searchTerm . '%')
                   ->orWhere('address', 'like', '%' . $this->searchTerm . '%');
             });
         }
 
         // Apply category filter
         if (!empty($this->selectedCategory)) {
-            $query->where('business_category', $this->selectedCategory);
+            $query->where('categories', $this->selectedCategory);
         }
 
         if ($this->showAll) {
