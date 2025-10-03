@@ -279,7 +279,7 @@ new class extends Component {
                         @if ($profile->whatsapp || $profile->instagram)
                             <div class="flex items-center space-x-4 mb-4 pb-4 border-b border-gray-100">
                                 @if ($profile->whatsapp)
-                                    <a href="https://wa.me/{{ $profile->whatsapp }}" target="_blank"
+                                    <a href="https://wa.me/+62{{ $profile->whatsapp }}" target="_blank"
                                         class="flex items-center text-green-600 hover:text-green-700 text-sm transition-colors duration-200">
                                         <span class="mr-1">📱</span>
                                         <span>WhatsApp</span>

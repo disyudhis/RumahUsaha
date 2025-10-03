@@ -166,7 +166,7 @@ new class extends Component {
                                 </div>
                                 <div class="space-y-1">
                                     @if ($umkm->whatsapp)
-                                        <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $umkm->whatsapp) }}"
+                                        <a href="https://wa.me/+62{{ preg_replace('/[^0-9]/', '', $umkm->whatsapp) }}"
                                             target="_blank"
                                             class="block text-success-600 hover:text-success-700 font-medium">
                                             WA: {{ $umkm->whatsapp }}
@@ -268,7 +268,7 @@ new class extends Component {
                     <h3 class="font-bold text-neutral-900 text-lg mb-6 text-center">Hubungi Usaha</h3>
                     <div class="space-y-4">
                         @if ($umkm->whatsapp)
-                            <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $umkm->whatsapp) }}"
+                            <a href="https://wa.me/+62{{ preg_replace('/[^0-9]/', '', $umkm->whatsapp) }}"
                                 target="_blank"
                                 class="flex items-center justify-center w-full bg-success-600 text-white px-6 py-3 rounded-xl hover:bg-success-700 transition-all duration-300 hover:shadow-lg font-medium">
                                 <svg class="w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 24 24">
