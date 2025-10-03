@@ -20,6 +20,7 @@ new class extends Component {
     public $link_website;
     public $description;
     public $logo;
+    public $asal_komunitas;
     public $existingLogo;
     public $removeLogo = false;
 
@@ -41,6 +42,7 @@ new class extends Component {
             $this->link_website = $this->umkmProfile->link_website;
             $this->description = $this->umkmProfile->description;
             $this->existingLogo = $this->umkmProfile->logo;
+            $this->asal_komunitas = $this->umkmProfile->asal_komunitas;
         }
     }
 
@@ -77,6 +79,7 @@ new class extends Component {
                 'link_website' => 'nullable|url|max:255',
                 'description' => 'required|string|',
                 'logo' => 'nullable|image|max:2048',
+                'asal_komunitas' => 'nullable|string|max:255',
             ],
             [
                 'business_name.required' => 'Nama usaha wajib diisi',
@@ -88,6 +91,7 @@ new class extends Component {
                 'description.required' => 'Deskripsi usaha wajib diisi',
                 'logo.image' => 'File harus berupa gambar',
                 'logo.max' => 'Ukuran logo maksimal 2MB',
+                'asal_komunitas.max' => 'Asal komunitas maksimal 255 karakter',
                 'link_website.url' => 'Format website tidak valid',
             ],
         );
@@ -103,6 +107,7 @@ new class extends Component {
                 'instagram' => $this->instagram,
                 'link_website' => $this->link_website,
                 'description' => $this->description,
+                'asal_komunitas' => $this->asal_komunitas,
             ];
 
             // Handle logo upload
@@ -353,7 +358,7 @@ new class extends Component {
                     </div>
 
                     {{-- Grid Layout for Kecamatan and WhatsApp --}}
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                         {{-- Kecamatan --}}
                         <div>
                             <label for="kecamatan" class="block text-sm font-medium text-secondary-700 mb-2">
@@ -363,6 +368,19 @@ new class extends Component {
                                 class="w-full px-4 py-2.5 border border-accent-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors @error('kecamatan') border-red-500 @enderror"
                                 placeholder="Contoh: Bekasi Utara">
                             @error('kecamatan')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        {{-- Asal Komunitas --}}
+                        <div>
+                            <label for="asal_komunitas" class="block text-sm font-medium text-secondary-700 mb-2">
+                                Asal Komunitas
+                            </label>
+                            <input type="text" id="asal_komunitas" wire:model="asal_komunitas"
+                                class="w-full px-4 py-2.5 border border-accent-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors @error('asal_komunitas') border-red-500 @enderror"
+                                placeholder="Contoh: Komunitas UMKM Bekasi">
+                            @error('asal_komunitas')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
                         </div>
