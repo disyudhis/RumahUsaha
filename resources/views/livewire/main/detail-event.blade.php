@@ -176,27 +176,31 @@ new class extends Component {
                         </div>
 
                         <!-- Action Buttons -->
-                        {{-- <div class="flex flex-wrap gap-4 pt-4">
-                            <button type="button"
-                                class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white font-semibold rounded-xl shadow-warm transition-all duration-300 transform hover:scale-105">
-                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
-                                    </path>
-                                </svg>
-                                Daftar Event
-                            </button>
+                        @if ($event->link_url)
+                            <div class="flex flex-wrap gap-4 pt-4">
+                                <a href="{{ $event->link_url }}" target="_blank" rel="noopener noreferrer"
+                                    class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white font-semibold rounded-xl shadow-warm transition-all duration-300 transform hover:scale-105">
+                                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14">
+                                        </path>
+                                    </svg>
+                                    Kunjungi Event
+                                </a>
 
-                            <button type="button"
-                                class="inline-flex items-center px-6 py-3 bg-white hover:bg-neutral-50 text-neutral-700 font-semibold rounded-xl shadow-warm border-2 border-neutral-200 transition-all duration-300">
-                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z">
-                                    </path>
-                                </svg>
-                                Bagikan
-                            </button>
-                        </div> --}}
+                                <button type="button"
+                                    onclick="navigator.share ? navigator.share({title: '{{ $event->title }}', url: window.location.href}) : navigator.clipboard.writeText(window.location.href)"
+                                    class="inline-flex items-center px-6 py-3 bg-white hover:bg-neutral-50 text-neutral-700 font-semibold rounded-xl shadow-warm border-2 border-neutral-200 transition-all duration-300">
+                                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z">
+                                        </path>
+                                    </svg>
+                                    Bagikan
+                                </button>
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>
