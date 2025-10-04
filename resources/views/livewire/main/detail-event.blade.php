@@ -289,7 +289,7 @@ new class extends Component {
 
                         <div class="space-y-4">
                             @foreach ($relatedEvents as $related)
-                                <a href="{{ route('events.show', $related->slug) }}" class="block group">
+                                <a href="{{ route('main.events.show', $related->slug) }}" class="block group">
                                     <div class="flex gap-3 p-3 rounded-xl hover:bg-neutral-50 transition-colors">
                                         <div
                                             class="flex-shrink-0 w-16 h-16 bg-gradient-to-br from-primary-100 to-accent-100 rounded-lg overflow-hidden">
