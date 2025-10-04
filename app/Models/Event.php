@@ -26,7 +26,7 @@ class Event extends Model
         'info-kampus' => 'Info Kampus & Kolaborasi UMKM',
     ];
 
-    protected $fillable = ['title', 'categories', 'slug', 'description', 'event_date', 'image'];
+    protected $fillable = ['title', 'categories', 'slug', 'link_url', 'description', 'event_date', 'image'];
 
     protected $casts = [
         'event_date' => 'datetime',
