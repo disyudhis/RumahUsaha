@@ -13,6 +13,7 @@ new class extends Component {
     public string $categories = '';
     public string $event_date = '';
     public string $description = '';
+    public string $link_url = ''; // Tambahkan ini
     public $image;
 
     // Validation rules
@@ -23,6 +24,7 @@ new class extends Component {
             'categories' => 'required|in:' . implode(',', array_keys(Event::CATEGORIES)),
             'event_date' => 'required|date',
             'description' => 'required|string|max:1000',
+            'link_url' => 'required|url|max:500', // Tambahkan ini
             'image' => 'nullable|image|max:2048',
         ];
     }
@@ -36,6 +38,9 @@ new class extends Component {
         'event_date.required' => 'Tanggal event wajib diisi.',
         'description.required' => 'Deskripsi event wajib diisi.',
         'description.max' => 'Deskripsi event maksimal 1000 karakter.',
+        'link_url.required' => 'Link URL event wajib diisi.', // Tambahkan ini
+        'link_url.url' => 'Format URL tidak valid.', // Tambahkan ini
+        'link_url.max' => 'Link URL maksimal 500 karakter.', // Tambahkan ini
         'image.image' => 'File harus berupa gambar.',
         'image.max' => 'Ukuran gambar maksimal 2MB.',
     ];
@@ -57,6 +62,7 @@ new class extends Component {
                 'categories' => $this->categories,
                 'event_date' => $this->event_date,
                 'description' => $this->description,
+                'link_url' => $this->link_url, // Tambahkan ini
             ];
 
             // Handle image upload
@@ -246,6 +252,44 @@ new class extends Component {
                         </p>
                     </div>
                 </div>
+
+                <!-- Link URL Field -->
+<div>
+    <label for="link_url" class="block text-sm font-bold text-neutral-700 mb-2 font-inter">
+        Link URL Event <span class="text-primary-500">*</span>
+    </label>
+    <div class="relative">
+        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+            <svg class="w-5 h-5 text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+            </svg>
+        </div>
+        <input type="url" id="link_url" wire:model.live="link_url"
+            placeholder="https://example.com/event-registration"
+            class="w-full pl-12 pr-4 py-3 border-2 border-neutral-200 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-primary-400 transition-all duration-200 font-inter @error('link_url') border-red-300 focus:ring-red-400 focus:border-red-400 @enderror">
+    </div>
+    @error('link_url')
+        <p class="mt-2 text-sm text-red-600 flex items-center font-inter">
+            <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd"
+                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                    clip-rule="evenodd" />
+            </svg>
+            {{ $message }}
+        </p>
+    @enderror
+    @if ($link_url && !$errors->has('link_url'))
+        <div class="mt-3 inline-flex items-center px-4 py-2 bg-success-50 text-success-700 text-sm font-semibold rounded-lg font-inter">
+            <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    clip-rule="evenodd" />
+            </svg>
+            URL valid
+        </div>
+    @endif
+</div>
 
                 <!-- Image Upload Field -->
                 <div>
