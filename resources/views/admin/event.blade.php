@@ -4,5 +4,5 @@
 @section('description', 'Dashboard admin untuk mengelola platform UMKM')
 
 @section('content')
-<livewire:admin.createevent>
+    <livewire:admin.createevent>
     @endsection

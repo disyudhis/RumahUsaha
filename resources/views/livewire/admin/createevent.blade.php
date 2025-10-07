@@ -21,7 +21,7 @@ new class extends Component {
         return [
             'title' => 'required|string|max:255',
             'categories' => 'required|in:' . implode(',', array_keys(Event::CATEGORIES)),
-            'event_date' => 'required|date|after:today',
+            'event_date' => 'required|date',
             'description' => 'required|string|max:1000',
             'image' => 'nullable|image|max:2048',
         ];
@@ -34,7 +34,6 @@ new class extends Component {
         'categories.required' => 'Kategori event wajib dipilih.',
         'categories.in' => 'Kategori yang dipilih tidak valid.',
         'event_date.required' => 'Tanggal event wajib diisi.',
-        'event_date.after' => 'Tanggal event harus setelah hari ini.',
         'description.required' => 'Deskripsi event wajib diisi.',
         'description.max' => 'Deskripsi event maksimal 1000 karakter.',
         'image.image' => 'File harus berupa gambar.',
