@@ -43,8 +43,8 @@ new class extends Component {
                                 d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
                                 clip-rule="evenodd"></path>
                         </svg>
-                        {{-- <a href="{{ route('events.index') }}"
-                            class="ml-1 text-sm font-medium text-neutral-700 hover:text-primary-600 transition-colors md:ml-2">Event</a> --}}
+                        <a href="{{ route('events.index') }}"
+                            class="ml-1 text-sm font-medium text-neutral-700 hover:text-primary-600 transition-colors md:ml-2">Event</a>
                     </div>
                 </li>
                 <li aria-current="page">
