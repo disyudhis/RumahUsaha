@@ -23,7 +23,7 @@ new class extends Component {
             'title' => 'required|string|max:255',
             'categories' => 'required|in:' . implode(',', array_keys(Event::CATEGORIES)),
             'event_date' => 'required|date',
-            'description' => 'required|string|max:1000',
+            'description' => 'required|string',
             'link_url' => 'required|url|max:500', // Tambahkan ini
             'image' => 'nullable|image|max:2048',
         ];
@@ -37,7 +37,6 @@ new class extends Component {
         'categories.in' => 'Kategori yang dipilih tidak valid.',
         'event_date.required' => 'Tanggal event wajib diisi.',
         'description.required' => 'Deskripsi event wajib diisi.',
-        'description.max' => 'Deskripsi event maksimal 1000 karakter.',
         'link_url.required' => 'Link URL event wajib diisi.', // Tambahkan ini
         'link_url.url' => 'Format URL tidak valid.', // Tambahkan ini
         'link_url.max' => 'Link URL maksimal 500 karakter.', // Tambahkan ini
