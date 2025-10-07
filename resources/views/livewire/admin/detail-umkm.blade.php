@@ -114,7 +114,7 @@ new class extends Component {
             'product_description' => 'nullable|string',
             'product_price' => 'nullable|numeric|min:0',
             'product_category' => 'required|string',
-            'product_image' => $this->editingProduct ? 'nullable|image|max:2048' : 'nullable|image|max:2048',
+            'product_image' => 'nullable|image|max:2048',
         ]);
 
         $productData = [
@@ -129,8 +129,8 @@ new class extends Component {
         // Handle image upload
         if ($this->product_image) {
             // If editing and has existing image, delete it
-            if ($this->editingProduct && $this->editingProduct->image && Storage::exists($this->editingProduct->image)) {
-                Storage::delete($this->editingProduct->image);
+            if ($this->editingProduct && $this->editingProduct->image && \Storage::exists($this->editingProduct->image)) {
+                \Storage::delete($this->editingProduct->image);
             }
 
             $productData['image'] = $this->product_image->store('product-images', 'public');
@@ -147,6 +147,9 @@ new class extends Component {
         }
 
         $this->showProductModal = false;
+        $this->initializeProductForm();
+        $this->editingProduct = null;
+        $this->product_image = null; // Reset file input
         $this->umkm->refresh();
     }
 
@@ -169,8 +172,8 @@ new class extends Component {
     {
         if ($this->editingProduct) {
             // Delete product image if exists
-            if ($this->editingProduct->image && Storage::exists($this->editingProduct->image)) {
-                Storage::delete($this->editingProduct->image);
+            if ($this->editingProduct->image && \Storage::exists($this->editingProduct->image)) {
+                \Storage::delete($this->editingProduct->image);
             }
 
             $this->editingProduct->delete();
@@ -259,7 +262,16 @@ new class extends Component {
 
     public function updateUmkm()
     {
-        $this->validate();
+        $this->validate([
+            'business_name' => 'required|string|max:255',
+            'owner_name' => 'required|string|max:255',
+            'address' => 'nullable|string',
+            'whatsapp' => 'nullable|string|max:20',
+            'instagram' => 'nullable|string|max:100',
+            'description' => 'nullable|string',
+            'link_website' => 'nullable|url',
+            'new_logo' => 'nullable|image|max:2048',
+        ]);
 
         $updateData = [
             'business_name' => $this->business_name,
@@ -275,32 +287,37 @@ new class extends Component {
         // Handle logo upload
         if ($this->new_logo) {
             // Delete old logo if exists
-            if ($this->umkm->logo && Storage::exists($this->umkm->logo)) {
-                Storage::delete($this->umkm->logo);
+            if ($this->umkm->logo && \Storage::exists($this->umkm->logo)) {
+                \Storage::delete($this->umkm->logo);
             }
 
             $updateData['logo'] = $this->new_logo->store('umkm-logos', 'public');
         }
 
         $this->umkm->update($updateData);
-        $this->umkm->user->update(['is_approved' => true]);
+
+        // Update user approval status
+        if ($this->umkm->user) {
+            $this->umkm->user->update(['is_approved' => true]);
+        }
 
         session()->flash('success', 'Data UMKM berhasil diperbarui!');
         $this->showEditModal = false;
+        $this->new_logo = null; // Reset file input
         $this->umkm->refresh();
     }
 
     public function deleteUmkm()
     {
         // Delete logo if exists
-        if ($this->umkm->logo && Storage::exists($this->umkm->logo)) {
-            Storage::delete($this->umkm->logo);
+        if ($this->umkm->logo && \Storage::exists($this->umkm->logo)) {
+            \Storage::delete($this->umkm->logo);
         }
 
         // Delete associated products and their images
         foreach ($this->umkm->products as $product) {
-            if ($product->image && Storage::exists($product->image)) {
-                Storage::delete($product->image);
+            if ($product->image && \Storage::exists($product->image)) {
+                \Storage::delete($product->image);
             }
         }
 
