@@ -46,7 +46,7 @@ new class extends Component {
 
     public function showDetailProduct($productId)
     {
-        return $this->redirect(route('main.products.show', ['id' => $productId]), navigate: true);
+        return $this->redirect(route('main.products.show', ['slug' => $productId]), navigate: true);
     }
 }; ?>
 
