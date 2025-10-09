@@ -4,5 +4,5 @@
 @section('description', 'Dashboard admin untuk mengelola platform UMKM')
 
 @section('content')
-<livewire:admin.detail-umkm :id="$id" />
+    <livewire:admin.detail-umkm :slug="$slug" />
 @endsection

@@ -45,27 +45,25 @@
                     <div class="mt-4 w-24 h-1 bg-gradient-to-r from-primary-400 to-primary-600 mx-auto rounded-full"></div>
                 </div>
 
-                {{-- Single Sponsor/Partner Showcase --}}
-                <div class="max-w-4xl mx-auto mb-12">
-                    <div
-                        class="bg-white rounded-2xl shadow-warm-lg p-8 md:p-12 hover:shadow-warm-xl transition-all duration-500 transform hover:scale-[1.02]">
-                        <div class="flex flex-col md:flex-row items-center gap-8">
-                            {{-- Logo Section --}}
-                            <div class="flex-shrink-0 flex items-center justify-center w-full">
-                                <div class="flex items-center justify-center p-6 shadow-inner">
-                                    <a href="https://lppm.unisma.ac.id/#">
-                                        <img src="{{ asset('assets/sponsor-unisma.jpeg') }}" alt="Partner Name"
-                                            class="max-w-80 max-h-40 object-contain mx-auto">
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                {{-- Sponsor Grid --}}
+                <div
+                    class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 items-center justify-items-center bg-white rounded-2xl shadow-warm-lg p-8 md:p-12">
+                    <a href="https://lppm.unisma.ac.id/#">
+                        <img src="{{ asset('assets/sponsor-unisma.jpeg') }}" alt="LPPM Unisma"
+                            class="max-w-60 max-h-32 object-contain mx-auto">
+                    </a>
 
+                    <a href="#">
+                        <img src="{{ asset('assets/logo-dinova-long-01.png') }}" alt="Dinova"
+                            class="max-w-60 max-h-32 object-contain mx-auto">
+                    </a>
+
+                    {{-- Tambah sponsor lain di sini --}}
+                </div>
             </div>
         </div>
     </section>
+
 
     {{-- Join Community Section --}}
     <section id="join-community" class="text-center scroll-mt-20">

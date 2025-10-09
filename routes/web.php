@@ -21,12 +21,16 @@ Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
         ->group(function () {
             Route::view('/', 'admin.dashboard')->name('dashboard');
             Route::view('/umkm', 'admin.umkm')->name('umkm');
+            Route::view('/umkm/create-umkm', 'admin.create-umkm')->name('umkm.create');
             Route::view('/event', 'admin.event')->name('event');
-            Route::view('/detail-umkm/{id}', 'admin.detail-umkm')->name('detail-umkm');
+            Route::view('/event/create', 'admin.create-event')->name('event.create');
+            Route::view('/umkm/detail-umkm/{slug}', 'admin.detail-umkm')->name('detail-umkm');
+            Route::view('/event/detail-event/{slug}', 'admin.detail-event')->name('detail-event');
             // Volt::route('/umkm', 'admin.createumkm')->name('umkm');
             // Volt::route('/events', 'admin.createevent')->name('events');
         });
 });
+
 Route::middleware(['auth', 'verified', 'role:pemilik_umkm', 'approved'])->group(function () {
     Route::prefix('umkm')
         ->name('umkm.')

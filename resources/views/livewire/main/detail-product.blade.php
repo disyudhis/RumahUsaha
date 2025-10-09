@@ -213,7 +213,7 @@ new class extends Component {
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                     @foreach ($relatedProducts as $related)
-                        <a href="{{ route('main.products.show', $related->slug) }}"
+                        <button wire:click='showDetailProduct("{{ $related->slug }}")'
                             class="group bg-white rounded-xl shadow-md hover:shadow-warm-lg border border-neutral-200 hover:border-primary-300 transition-all duration-300 overflow-hidden">
                             <div class="aspect-square bg-neutral-100 overflow-hidden">
                                 @if ($related->image)
@@ -242,7 +242,7 @@ new class extends Component {
                                     {{ $related->umkmProfile->business_name }}
                                 </p>
                             </div>
-                        </a>
+                        </button>
                     @endforeach
                 </div>
             </div>
