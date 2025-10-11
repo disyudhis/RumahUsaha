@@ -23,6 +23,7 @@ new class extends Component {
     public $link_website;
     public $description;
     public $asal_komunitas;
+    public $is_active;
     public $is_approved;
 
     public $logo;
@@ -115,8 +116,6 @@ new class extends Component {
             'link_website' => $this->link_website,
             'description' => $this->description,
             'asal_komunitas' => $this->asal_komunitas,
-            'is_active' => $this->is_active,
-            'is_approved' => $this->is_approved,
         ];
 
         // Handle logo upload
