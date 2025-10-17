@@ -125,15 +125,6 @@ new class extends Component {
         // Remove all non-numeric characters except +
         $cleaned = preg_replace('/[^0-9+]/', '', $number);
 
-        // If starts with 08, replace with +628
-        if (str_starts_with($cleaned, '08')) {
-            $cleaned = '+62' . substr($cleaned, 1);
-        }
-        // If starts with 8, add +62
-        elseif (str_starts_with($cleaned, '8') && !str_starts_with($cleaned, '+')) {
-            $cleaned = '+62' . $cleaned;
-        }
-
         return $cleaned;
     }
 
@@ -415,7 +406,7 @@ new class extends Component {
                     <div>
                         <label for="whatsapp"
                             class="block text-sm font-semibold text-neutral-800 mb-2">WhatsApp</label>
-                        <input type="tel" id="whatsapp" wire:model.live="whatsapp" placeholder="08123456789"
+                        <input type="tel" id="whatsapp" wire:model.live="whatsapp" placeholder="+628123140190"
                             class="w-full px-4 py-3 border border-neutral-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors duration-200 bg-neutral-50 @error('whatsapp') border-red-400 @enderror">
                         @error('whatsapp')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
