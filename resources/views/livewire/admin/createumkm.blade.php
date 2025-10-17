@@ -49,7 +49,7 @@ new class extends Component {
             'categories' => 'required|string|in:' . implode(',', array_keys(UmkmProfile::CATEGORIES)),
             'kecamatan' => 'required|string|max:255',
             'address' => 'nullable|string|max:500',
-            'whatsapp' => 'nullable|string|regex:/^([0-9\s\-\+\(\)]*)$/|min:10|max:15',
+            'whatsapp' => 'nullable|string|regex:/^[0-9]{10,13}$/|min:10|max:13',
             'instagram' => 'nullable|string|regex:/^@?[a-zA-Z0-9._]+$/|max:30',
             'asal_komunitas' => 'nullable|string|max:255',
             'link_website' => 'nullable|url|max:255',
@@ -81,9 +81,9 @@ new class extends Component {
         'kecamatan.required' => 'Kecamatan wajib diisi.',
         'kecamatan.max' => 'Kecamatan maksimal 255 karakter.',
         'address.max' => 'Alamat usaha maksimal 500 karakter.',
-        'whatsapp.regex' => 'Format nomor WhatsApp tidak valid.',
+        'whatsapp.regex' => 'Nomor WhatsApp harus hanya angka (10-13 digit).',
         'whatsapp.min' => 'Nomor WhatsApp minimal 10 digit.',
-        'whatsapp.max' => 'Nomor WhatsApp maksimal 15 digit.',
+        'whatsapp.max' => 'Nomor WhatsApp maksimal 13 digit.',
         'instagram.regex' => 'Format username Instagram tidak valid.',
         'instagram.max' => 'Username Instagram maksimal 30 karakter.',
         'asal_komunitas.max' => 'Asal komunitas maksimal 255 karakter.',
@@ -102,7 +102,7 @@ new class extends Component {
             $this->owner_name = $this->name;
         }
 
-        // Format WhatsApp number
+        // Format WhatsApp number - hanya angka
         if ($propertyName === 'whatsapp') {
             $this->whatsapp = $this->formatWhatsAppNumber($this->whatsapp);
         }
@@ -115,15 +115,27 @@ new class extends Component {
         $this->validateOnly($propertyName);
     }
 
-    // Format WhatsApp number
+    // Format WhatsApp number - hanya angka tanpa format
     private function formatWhatsAppNumber($number)
     {
         if (empty($number)) {
             return '';
         }
 
-        // Remove all non-numeric characters except +
-        $cleaned = preg_replace('/[^0-9+]/', '', $number);
+        // Remove semua karakter non-numeric
+        $cleaned = preg_replace('/[^0-9]/', '', $number);
+
+        // // Jika dimulai dengan 0, ganti dengan 62
+        // if (str_starts_with($cleaned, '0')) {
+        //     $cleaned = '62' . substr($cleaned, 1);
+        // }
+        // // Jika tidak dimulai dengan 62, tambahkan 62
+        // elseif (!str_starts_with($cleaned, '62')) {
+        //     $cleaned = '62' . $cleaned;
+        // }
+
+        // Batasi panjang maksimal 13 digit (62 + 11 digit nomor lokal)
+        $cleaned = substr($cleaned, 0, 13);
 
         return $cleaned;
     }
@@ -174,6 +186,7 @@ new class extends Component {
                     $profileData['logo'] = $this->logo->store('umkm-logos', 'public');
                 }
 
+                dd($profileData);
                 // Create UMKM profile
                 UmkmProfile::create($profileData);
 
@@ -406,14 +419,25 @@ new class extends Component {
                     <div>
                         <label for="whatsapp"
                             class="block text-sm font-semibold text-neutral-800 mb-2">WhatsApp</label>
-                        <input type="tel" id="whatsapp" wire:model.live="whatsapp" placeholder="+628123140190"
-                            class="w-full px-4 py-3 border border-neutral-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors duration-200 bg-neutral-50 @error('whatsapp') border-red-400 @enderror">
+                        <div
+                            class="flex items-center gap-0 border border-neutral-200 rounded-lg overflow-hidden focus-within:ring-2 focus-within:ring-primary-500 bg-neutral-50">
+                            <!-- Prefix Statis -->
+                            <div
+                                class="px-4 py-3 bg-neutral-100 border-r border-neutral-200 text-neutral-600 font-medium whitespace-nowrap">
+                                +62
+                            </div>
+                            <!-- Input Field -->
+                            <input type="tel" id="whatsapp" wire:model.live="whatsapp" placeholder="8123140190"
+                                inputmode="numeric"
+                                class="flex-1 px-4 py-3 border-0 focus:ring-0 bg-neutral-50 @error('whatsapp') bg-red-50 @enderror">
+                        </div>
                         @error('whatsapp')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                         @if ($whatsapp)
-                            <p class="mt-1 text-xs text-success-600 font-medium">✓ Format: {{ $whatsapp }}</p>
+                            <p class="mt-1 text-xs text-success-600 font-medium">✓ Nomor: +62{{ $whatsapp }}</p>
                         @endif
+                        <p class="mt-1 text-xs text-neutral-500">Mulai dari angka 8 (maksimal 13 digit)</p>
                     </div>
 
                     <div>
