@@ -39,7 +39,7 @@ new class extends Component {
             'name' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z\s]+$/'],
             'email' => ['required', 'email', 'max:255', 'unique:users,email'],
             'password' => ['required', 'confirmed', Password::min(8)->letters()->mixedCase()->numbers()],
-            'business_name' => ['required', 'string', 'max:255', 'min:3'],
+            'business_name' => ['required', 'string', 'max:255', 'min:3', 'unique:umkm_profiles,business_name'],
             'owner_name' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z\s]+$/'],
             'address' => ['required', 'string', 'min:10', 'max:500'],
             'kecamatan' => ['required', 'string', 'max:100'],

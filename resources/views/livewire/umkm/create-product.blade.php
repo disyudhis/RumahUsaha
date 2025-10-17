@@ -452,7 +452,7 @@ new class extends Component {
                             <div class="relative">
                                 <span
                                     class="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-500 font-medium">Rp</span>
-                                <input type="text" id="price" wire:model.live="price" required
+                                <input type="number" id="price" wire:model.live="price" required
                                     class="w-full pl-12 pr-4 py-3 border-2 border-neutral-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all @error('price') border-red-400 bg-red-50 @enderror"
                                     placeholder="50000">
                             </div>
