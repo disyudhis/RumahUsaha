@@ -48,10 +48,6 @@
                 {{-- Sponsor Grid --}}
                 <div
                     class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 items-center justify-items-center bg-white rounded-2xl shadow-warm-lg p-8 md:p-12">
-                    <a href="https://lppm.unisma.ac.id/#">
-                        <img src="{{ asset('assets/sponsor-unisma.jpeg') }}" alt="LPPM Unisma"
-                            class="max-w-60 max-h-32 object-contain mx-auto">
-                    </a>
 
                     <a href="#">
                         <img src="{{ asset('assets/logo-dinova-long-01.png') }}" alt="Dinova"
