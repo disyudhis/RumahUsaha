@@ -54,6 +54,11 @@
                             class="max-w-60 max-h-32 object-contain mx-auto">
                     </a>
 
+
+                    <a href="#">
+                        <img src="{{ asset('assets/sponsor-unisma.jpeg') }}" alt="LPPM Unisma"
+                            class="max-w-60 max-h-32 object-contain mx-auto">
+                    </a>
                     {{-- Tambah sponsor lain di sini --}}
                 </div>
             </div>
