@@ -9,12 +9,12 @@ class Product extends Model
 {
     use Sluggable;
 
-     public function sluggable(): array
+    public function sluggable(): array
     {
         return [
             'slug' => [
-                'source' => 'name'
-            ]
+                'source' => 'name',
+            ],
         ];
     }
     const CATEGORIES = [
@@ -37,7 +37,7 @@ class Product extends Model
      */
     public function getFormattedPriceAttribute()
     {
-        return number_format($this->price, 0, ',', '.');
+        return 'Rp ' . number_format($this->price, 0, ',', '.');
     }
 
     /**

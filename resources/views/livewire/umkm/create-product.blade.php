@@ -34,7 +34,7 @@ new class extends Component {
         return [
             'name' => 'required|string|max:255',
             'description' => 'required|string|max:2000',
-            'price' => 'required|numeric|min:0',
+            'price' => 'required|numeric|min:0|max:999999999|regex:/^\d+(\.\d{1,2})?$/',
             'category' => 'required|string|in:' . implode(',', array_keys(Product::CATEGORIES)),
             'image' => 'required|image|max:2048',
             'whatsapp' => 'nullable|string|regex:/^([0-9\s\-\+\(\)]*)$/|min:10|max:15',
@@ -51,6 +51,7 @@ new class extends Component {
         'price.required' => 'Harga produk wajib diisi.',
         'price.numeric' => 'Harga harus berupa angka.',
         'price.min' => 'Harga tidak boleh negatif.',
+        'price.max' => 'Harga maksimal adalah Rp 999.999.999',
         'category.required' => 'Kategori produk wajib dipilih.',
         'category.in' => 'Kategori yang dipilih tidak valid.',
         'image.required' => 'Foto produk wajib diupload.',
@@ -80,12 +81,15 @@ new class extends Component {
     // Format price
     private function formatPrice($price)
     {
-        $cleaned = preg_replace('/[^0-9.]/', '', $price);
-        $parts = explode('.', $cleaned);
-        if (count($parts) > 2) {
-            $cleaned = $parts[0] . '.' . $parts[1];
+        // Hapus semua karakter kecuali angka
+        $cleaned = preg_replace('/[^0-9]/', '', $price);
+
+        // Batasi maksimal 12 digit (999 miliar)
+        if (strlen($cleaned) > 12) {
+            $cleaned = substr($cleaned, 0, 12);
         }
-        return $cleaned;
+
+        return $cleaned ?: '';
     }
 
     // Format WhatsApp number
@@ -156,7 +160,7 @@ new class extends Component {
             $productData = [
                 'name' => $this->name,
                 'description' => $this->description,
-                'price' => floatval(str_replace(',', '', $this->price)),
+                'price' => intval(preg_replace('/[^0-9]/', '', $this->price)), // Pastikan integer
                 'category' => $this->category,
                 'umkm_profile_id' => $umkmProfile->id,
             ];
@@ -193,7 +197,7 @@ new class extends Component {
             return '';
         }
 
-        $numericPrice = floatval(str_replace(',', '', $this->price));
+        $numericPrice = intval(preg_replace('/[^0-9]/', '', $this->price));
         return 'Rp ' . number_format($numericPrice, 0, ',', '.');
     }
 

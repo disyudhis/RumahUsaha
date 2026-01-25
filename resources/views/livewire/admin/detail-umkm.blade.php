@@ -25,6 +25,7 @@ new class extends Component {
     public $asal_komunitas;
     public $is_active;
     public $is_approved;
+    public $showApprovalModal = false;
 
     public $logo;
     public $existingLogo;
@@ -162,16 +163,51 @@ new class extends Component {
         return redirect()->route('admin.umkm');
     }
 
+    public function confirmApproval()
+    {
+        $this->showApprovalModal = true;
+    }
+
     public function toggleApproval()
     {
         try {
-            $this->umkm->user->update(['is_approved' => !$this->umkm->is_approved]);
-            $this->umkm->update(['is_approved' => !$this->umkm->is_approved, 'is_active' => !$this->umkm->is_approved]);
+            DB::beginTransaction();
+
+            $newApprovalStatus = !$this->umkm->is_approved;
+
+            // Update User status
+            $this->umkm->user->update([
+                'is_approved' => $newApprovalStatus,
+            ]);
+
+            // Update UMKM Profile status
+            $this->umkm->update([
+                'is_approved' => $newApprovalStatus,
+                'is_active' => $newApprovalStatus,
+            ]);
+
+            // Update product status based on approval
+            if ($newApprovalStatus) {
+                // If approving, activate all products
+                $this->umkm->products()->update(['is_active' => true]);
+            } else {
+                // If disapproving, deactivate all products
+                $this->umkm->products()->update(['is_active' => false]);
+            }
+
+            DB::commit();
+
+            $this->showApprovalModal = false;
+            $this->loadUmkm();
+
+            $message = $newApprovalStatus ? 'UMKM berhasil disetujui! Semua produk telah diaktifkan.' : 'UMKM berhasil ditolak dan semua produk dinonaktifkan!';
+
+            session()->flash('success', $message);
         } catch (\Exception $e) {
-            session()->flash('error', 'Gagal memperbarui status persetujuan user terkait.');
+            DB::rollBack();
+            \Log::error('Approval Toggle Error: ' . $e->getMessage());
+            session()->flash('error', 'Gagal mengubah status persetujuan. Silakan coba lagi.');
         }
-        $this->loadUmkm();
-        session()->flash('success', 'Status persetujuan berhasil diubah!');
     }
 
     public function openProductModal($productId = null)
@@ -731,15 +767,72 @@ new class extends Component {
 
                     <div class="p-6 space-y-4">
                         {{-- Approval Status --}}
-                        <div class="flex items-center justify-between p-4 bg-accent-50 rounded-lg">
-                            <div>
-                                <p class="text-sm font-medium text-secondary-700">Status Disetujui</p>
-                                <p class="text-xs text-secondary-600 mt-1">Verifikasi admin</p>
+                        <div class="p-4 bg-accent-50 rounded-lg space-y-3">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-sm font-medium text-secondary-700">Status Verifikasi</p>
+                                    <p class="text-xs text-secondary-600 mt-1">
+                                        @if ($umkm->is_approved)
+                                            <span
+                                                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-success-100 text-success-800">
+                                                <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path fill-rule="evenodd"
+                                                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                                        clip-rule="evenodd" />
+                                                </svg>
+                                                Disetujui
+                                            </span>
+                                        @else
+                                            <span
+                                                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800">
+                                                <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path fill-rule="evenodd"
+                                                        d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 9.586 8.707 8.293z"
+                                                        clip-rule="evenodd" />
+                                                </svg>
+                                                Belum Disetujui
+                                            </span>
+                                        @endif
+                                    </p>
+                                </div>
                             </div>
-                            <button wire:click="toggleApproval"
-                                class="relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 {{ $umkm->is_approved ? 'bg-success-600' : 'bg-secondary-300' }}">
-                                <span
-                                    class="translate-x-0 pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out {{ $umkm->is_approved ? 'translate-x-5' : 'translate-x-0' }}"></span>
+
+                            <div class="flex items-center justify-between pt-3 border-t border-accent-200">
+                                <div>
+                                    <p class="text-xs text-secondary-600">Status User</p>
+                                    <p class="text-sm font-medium text-secondary-900">
+                                        {{ $umkm->user->is_approved ? 'Aktif' : 'Tidak Aktif' }}
+                                    </p>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-secondary-600">Status UMKM</p>
+                                    <p class="text-sm font-medium text-secondary-900">
+                                        {{ $umkm->is_active ? 'Aktif' : 'Tidak Aktif' }}
+                                    </p>
+                                </div>
+                            </div>
+
+                            {{-- Approval Action Button --}}
+                            <button wire:click="confirmApproval"
+                                class="w-full mt-3 px-4 py-2.5 rounded-lg font-medium text-sm transition-all duration-200 flex items-center justify-center
+                {{ $umkm->is_approved
+                    ? 'bg-amber-50 text-amber-700 border border-amber-200 hover:bg-amber-100'
+                    : 'bg-success-50 text-success-700 border border-success-200 hover:bg-success-100' }}">
+                                @if ($umkm->is_approved)
+                                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+                                    </svg>
+                                    Batalkan Persetujuan
+                                @else
+                                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                    Setujui UMKM
+                                @endif
                             </button>
                         </div>
 
@@ -972,8 +1065,80 @@ new class extends Component {
                         Batal
                     </button>
                     <button wire:click="deleteProduct"
-                        class="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-medium shadow-warm">
+                        class="flex-1 px-4 py-2 bg-red-100 text-white rounded-lg hover:bg-red-700 transition-colors font-medium shadow-warm">
                         Ya, Hapus
+                    </button>
+                </div>
+            </div>
+        </div>
+    @endif
+
+    {{-- Approval Confirmation Modal --}}
+    @if ($showApprovalModal)
+        <div class="fixed inset-0 bg-secondary-900 bg-opacity-50 z-50 flex items-center justify-center p-4"
+            wire:click.self="$set('showApprovalModal', false)">
+            <div class="bg-white rounded-2xl shadow-warm-xl max-w-md w-full p-6 transform transition-all" @click.stop>
+                <div
+                    class="flex items-center justify-center w-12 h-12 rounded-full mb-4
+                {{ $umkm->is_approved ? 'bg-amber-100' : 'bg-success-100' }}">
+                    @if ($umkm->is_approved)
+                        <svg class="w-6 h-6 text-amber-600" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                        </svg>
+                    @else
+                        <svg class="w-6 h-6 text-success-600" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    @endif
+                </div>
+
+                <h3 class="text-xl font-bold text-secondary-900 mb-2">
+                    {{ $umkm->is_approved ? 'Batalkan Persetujuan?' : 'Setujui UMKM?' }}
+                </h3>
+
+                @if ($umkm->is_approved)
+                    <p class="text-secondary-600 mb-6">
+                        Apakah Anda yakin ingin membatalkan persetujuan untuk
+                        <strong>{{ $umkm->business_name }}</strong>?
+                        <br><br>
+                        <span class="text-amber-700 font-medium">⚠️ Tindakan ini akan:</span>
+                    </p>
+                    <ul class="list-disc list-inside text-sm text-secondary-700 mb-6 space-y-1 ml-2">
+                        <li>Menonaktifkan akun user terkait</li>
+                        <li>Menonaktifkan profil UMKM</li>
+                        <li><strong>Menonaktifkan semua produk ({{ $umkm->products->count() }} produk)</strong></li>
+                        <li>User tidak dapat login hingga disetujui kembali</li>
+                    </ul>
+                @else
+                    <p class="text-secondary-600 mb-6">
+                        Apakah Anda yakin ingin menyetujui <strong>{{ $umkm->business_name }}</strong>?
+                        <br><br>
+                        <span class="text-success-700 font-medium">✓ Tindakan ini akan:</span>
+                    </p>
+                    <ul class="list-disc list-inside text-sm text-secondary-700 mb-6 space-y-1 ml-2">
+                        <li>Mengaktifkan akun user ({{ $umkm->user->email }})</li>
+                        <li>Mengaktifkan profil UMKM</li>
+                        <li><strong>Mengaktifkan semua produk ({{ $umkm->products->count() }} produk)</strong></li>
+                        <li>User dapat login ke sistem</li>
+                        <li>UMKM dapat mengelola produk mereka</li>
+                    </ul>
+                @endif
+
+                <div class="flex items-center space-x-3">
+                    <button wire:click="$set('showApprovalModal', false)"
+                        class="flex-1 px-4 py-2 border border-secondary-300 text-secondary-700 rounded-lg hover:bg-secondary-50 transition-colors font-medium">
+                        Batal
+                    </button>
+                    <button wire:click="toggleApproval"
+                        class="flex-1 px-4 py-2 rounded-lg transition-colors font-medium shadow-warm
+                    {{ $umkm->is_approved
+                        ? 'bg-amber-600 text-white hover:bg-amber-700'
+                        : 'bg-success-600 text-white hover:bg-success-700' }}">
+                        {{ $umkm->is_approved ? 'Ya, Batalkan' : 'Ya, Setujui' }}
                     </button>
                 </div>
             </div>
