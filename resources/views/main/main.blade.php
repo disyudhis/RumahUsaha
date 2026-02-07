@@ -55,10 +55,10 @@
                     </a>
 
 
-                    <a href="https://lppm.unisma.ac.id/" target="_blank" rel="noopener noreferrer">
+                    {{-- <a href="https://lppm.unisma.ac.id/" target="_blank" rel="noopener noreferrer">
                         <img src="{{ asset('assets/sponsor-unisma.jpeg') }}" alt="LPPM Unisma"
                             class="max-w-60 max-h-32 object-contain mx-auto">
-                    </a>
+                    </a> --}}
                     {{-- Tambah sponsor lain di sini --}}
                 </div>
             </div>
