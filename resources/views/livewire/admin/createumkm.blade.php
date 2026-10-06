@@ -186,7 +186,6 @@ new class extends Component {
                     $profileData['logo'] = $this->logo->store('umkm-logos', 'public');
                 }
 
-                dd($profileData);
                 // Create UMKM profile
                 UmkmProfile::create($profileData);
 
